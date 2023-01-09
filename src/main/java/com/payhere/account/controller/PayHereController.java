@@ -10,6 +10,7 @@ import springfox.documentation.annotations.ApiIgnore;
 @RestController
 public class PayHereController {
 
+    /*CI/CD TEST*/
     @GetMapping(value = "/api/hello", produces = "application/json; charset=utf8")
     public String hello() {
         String value = "안녕하세요 PayHere 지원자 김건우입니다";
