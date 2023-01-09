@@ -1,4 +1,4 @@
-package com.payhere.account.domain.Response;
+package com.payhere.account.domain.Response.user;
 
 import com.payhere.account.domain.entity.User;
 import lombok.AllArgsConstructor;
@@ -17,7 +17,7 @@ public class UserJoinResponse {
     public static UserJoinResponse of(User user){
         return UserJoinResponse.builder()
                 .userId(user.getId())
-                .userName(user.getUsername())
+                .userName(user.getUserName())
                 .email(user.getEmail())
                 .build();
     }

@@ -6,22 +6,19 @@ import lombok.*;
 
 import javax.validation.constraints.Email;
 
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
-@ToString
+@Getter @ToString
 public class UserJoinRequest {
     private String userName;
-    @Email(message = "올바른 이메일 주소를 입력해주세요.")
     private String email;
     private String password;
 
-    public User toEntity(String password) {
+    public User toEntity(String encodePassword) {
         return User.builder()
                 .userName(userName)
                 .email(email)
-                .password(password)
+                .password(encodePassword)
                 .role(UserRole.ROLE_USER)
                 .build();
     }
