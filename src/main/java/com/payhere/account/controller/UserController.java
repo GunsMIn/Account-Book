@@ -1,8 +1,10 @@
 package com.payhere.account.controller;
 
 import com.payhere.account.domain.Response.Response;
-import com.payhere.account.domain.Response.UserJoinResponse;
+import com.payhere.account.domain.Response.user.UserJoinResponse;
+import com.payhere.account.domain.Response.user.UserLoginResponse;
 import com.payhere.account.domain.dto.user.UserJoinRequest;
+import com.payhere.account.domain.dto.user.UserLoginRequest;
 import com.payhere.account.domain.entity.User;
 import com.payhere.account.service.UserService;
 import io.swagger.annotations.Api;
@@ -23,6 +25,10 @@ public class UserController {
 
     private final UserService userService;
 
+    /*   {
+        "email": "lancet@naver.com",
+         "password": "1234"
+           }    */
 
     //회원가입 컨트롤러
     @ApiOperation(value = "회원가입", notes = "회원가입 API")
@@ -33,6 +39,15 @@ public class UserController {
         log.info("user :{} ", user);
         UserJoinResponse userJoinResponse = UserJoinResponse.of(user);
         return Response.success(userJoinResponse);
+    }
+
+    //로그인 컨트롤러
+    @ApiOperation(value = "로그인", notes = "로그인 성공 후 JWT토큰 발급")
+    @PostMapping("/login")
+    public Response<UserLoginResponse> login(@RequestBody UserLoginRequest userLoginRequest) {
+        log.info("loginEmail : {}",userLoginRequest.getEmail());
+        String token = userService.login(userLoginRequest.getEmail(), userLoginRequest.getPassword());
+        return Response.success(new UserLoginResponse(token)); // 로그인 성공 시 토큰만 반환
     }
 
 }

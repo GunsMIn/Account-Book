@@ -3,11 +3,14 @@ package com.payhere.account.domain.entity;
 import lombok.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 @Entity
 @Getter
@@ -16,59 +19,59 @@ import java.util.Collection;
 @NoArgsConstructor
 @AllArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
-public class User extends BaseEntity implements UserDetails {
+public class User extends BaseEntity implements UserDetails  {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)
-    private String userName;
+    private String name;
 
     @Column(nullable = false)
     private String email;
 
     private String password;
 
-
-
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private UserRole role;
 
-    /**UserDetails 메서드**/
+
+    public User(String userName, String email, String password) {
+        this.name = userName;
+        this.email = email;
+        this.password = password;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        return List.of(new SimpleGrantedAuthority(this.getRole().name()));
     }
 
-    @Override
-    public String getPassword() {
-        return null;
-    }
-
+    /**주의**/
     @Override
     public String getUsername() {
-        return null;
+        return this.email;
     }
 
     @Override
     public boolean isAccountNonExpired() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isEnabled() {
-        return false;
+        return true;
     }
 }

@@ -16,7 +16,7 @@ public class UserJoinRequest {
 
     public User toEntity(String encodePassword) {
         return User.builder()
-                .userName(userName)
+                .name(userName)
                 .email(email)
                 .password(encodePassword)
                 .role(UserRole.ROLE_USER)
