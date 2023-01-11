@@ -6,6 +6,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
 
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+
 @AllArgsConstructor
 @Getter
 @Builder
@@ -20,13 +23,15 @@ public class AccountAddResponse {
 
     /**엔티티 -> Response 변환 메서드**/
     public static AccountAddResponse of(AccountBook accountBook) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd hh:mm:ss");
+
         return AccountAddResponse.builder()
                 .id(accountBook.getId())
                 .title(accountBook.getTitle())
                 .balance(accountBook.getBalance())
                 .userName(accountBook.getUser().getName())
                 .email(accountBook.getUser().getEmail())
-                .createdAt(accountBook.getRegisteredAt())
+                .createdAt(sdf.format(accountBook.getRegisteredAt()))
                 .build();
     }
 }

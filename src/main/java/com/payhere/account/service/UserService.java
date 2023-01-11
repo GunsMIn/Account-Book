@@ -1,7 +1,7 @@
 package com.payhere.account.service;
 
 import com.payhere.account.config.jwt.JwtUtil;
-import com.payhere.account.domain.dto.user.UserJoinRequest;
+import com.payhere.account.domain.dto.user.UserJoinDto;
 import com.payhere.account.domain.entity.User;
 import com.payhere.account.exception.ErrorCode;
 import com.payhere.account.exception.UserException;
@@ -31,18 +31,18 @@ public class UserService implements UserDetailsService {
     private long expireTimeMs = 1000 * 60 * 60; //1시간
 
     /**회원가입**/
-    public User join(UserJoinRequest userJoinRequest) {
-        log.info("매개변수로 들어온 값 :{}", userJoinRequest);
+    public User join(UserJoinDto userJoinDto) {
+        log.info("매개변수로 들어온 값 :{}", userJoinDto);
         /*중복된 이메일인지 check*/
-        userRepository.findByEmail(userJoinRequest.getEmail())
+        userRepository.findByEmail(userJoinDto.getEmail())
             .ifPresent(user -> {
                 throw new UserException(ErrorCode.DUPLICATED_EMAIL,ErrorCode.DUPLICATED_EMAIL.getMessage());
             });
 
         //비밀번호 암호화
-        String encodePassword = encoder.encode(userJoinRequest.getPassword());
+        String encodePassword = encoder.encode(userJoinDto.getPassword());
         log.info(encodePassword);
-        User user = userJoinRequest.toEntity(encodePassword);
+        User user = userJoinDto.toEntity(encodePassword);
         log.info("user : {}" , user);
         User savedUser = userRepository.save(user);
         log.info("저장된 회원 : {}",savedUser);
