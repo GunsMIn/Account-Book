@@ -36,9 +36,6 @@ public class Response<T> {
         return new Response("SUCCESS", message);
     }
 
- /*   public static <T> Response<T> success(T result,Integer count) {
-        return new Response(result, count);
-    }*/
 
 
 

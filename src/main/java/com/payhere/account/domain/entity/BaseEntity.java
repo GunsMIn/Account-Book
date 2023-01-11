@@ -7,6 +7,8 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
+import java.sql.Time;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -16,22 +18,13 @@ import java.time.format.DateTimeFormatter;
 @EntityListeners(AuditingEntityListener.class)
 public abstract class BaseEntity {
 
-    @Column(nullable = false, updatable = false)
     @CreatedDate
-    private String registeredAt;
+    @Column(updatable = false)
+    private Timestamp registeredAt;
 
     @LastModifiedDate
-    private String updatedAt;
+    private Timestamp updatedAt;
 
-    @PrePersist
-    public void onPrePersist(){
-        this.registeredAt = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss"));
-        this.updatedAt = this.registeredAt;
-    }
 
-    @PreUpdate
-    public void onPreUpdate(){
-        this.updatedAt = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss"));
-    }
 
 }

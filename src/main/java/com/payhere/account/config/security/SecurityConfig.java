@@ -1,5 +1,5 @@
 package com.payhere.account.config.security;
-import com.payhere.account.config.jwt.JwtTokenFilter;
+import com.payhere.account.config.jwt.JwtFilter;
 import com.payhere.account.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -30,16 +30,16 @@ public class SecurityConfig {
                 .csrf().disable()
                 .cors().and()
                 .authorizeRequests()
-                .antMatchers("/api/v1/users/join", "/api/v1/users/login", "/swagger-ui").permitAll() // join, login은 언제나 가능
-                .antMatchers(HttpMethod.GET, "/api/v1/**").permitAll()   // 모든 get 요청 허용
-                .antMatchers(HttpMethod.POST, "/api/v1/**").authenticated()  // 순서대로 적용이 되기 때문에 join, login 다음에 써주기
-                .antMatchers(HttpMethod.PUT, "/api/v1/**").authenticated()
-                .antMatchers(HttpMethod.DELETE, "/api/v1/**").authenticated()
+                .antMatchers("/api/users/join", "/api/users/login", "/swagger-ui").permitAll() // join, login은 언제나 가능
+                .antMatchers(HttpMethod.GET, "/api/**").authenticated()   // 모든 get 요청 허용
+                .antMatchers(HttpMethod.POST, "/api/**").authenticated()  // 순서대로 적용이 되기 때문에 join, login 다음에 써주기
+                .antMatchers(HttpMethod.PUT, "/api/**").authenticated()
+                .antMatchers(HttpMethod.DELETE, "/api/**").authenticated()
                 .and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-                .addFilterBefore(new JwtTokenFilter(userService, secretKey), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new JwtFilter(userService, secretKey), UsernamePasswordAuthenticationFilter.class)
                 //UserNamePasswordAuthenticationFilter 적용하기 전에 JWTTokenFilter를 적용 하라는 뜻.
                 .build();
     }
