@@ -16,7 +16,11 @@
 **Gitlab CI & Crontab CD** | :heavy_check_mark: 
 
 # ERD 다이어그램
-<img width="420" alt="12" src="https://user-images.githubusercontent.com/104709432/211974589-318b4921-a077-42b0-974e-2c2b8aafe435.PNG">
+- **User : 회원 테이블**
+- **Account_Book : 가계부 테이블**
+- **Record : 가계부 기록 테이블**
+<img width="500" alt="다이어그램" src="https://user-images.githubusercontent.com/104709432/211975196-96e9687a-32af-4ba7-bf7b-5f0b63fd9f14.PNG">
+
 
 
 ### 테스트 전용 로그인 회원
@@ -36,11 +40,11 @@
 | GET    | /api/**account_books**/{id}                     | 가계부 단건 조회   |                                           |✔ | 
 | POST    | /api/**account_books**/{id}             | 가계부 생성             | {"title": "string", "memo":"string", "balance":"string"}                                           |✔ | 
 | PATCH   | /api/**account_books**/{id}                      | 가계부 수정  |  {"title": "string", "memo":"string", "balance":"string"}   |✔ | 
-| DELETE    | /api/v1/**posts**/{postId}             | 가계부 삭제 |   |✔ | 
-| GET | /api/account_books/{bookId}/records/{recordId}             | 가계부 기록 조회  |                                           | ✔| 
-| GET | /api/account_books/{bookId}/records           | 가계부 기록 리스트 보기(최신순,20개) |                                           |✔ | 
-| POST | /api/account_books/{bookId}/records/          | 가계부 기록 쓰기 |                                           |✔ | 
-| PATCH |/api/account_books/{bookId}/records/{recordId}       | 가계부 기록 수정(with 가계부 잔고 수정) |{"money": "string", "memo":"string", "act":"string", "expendType":"string", "day":"string"}                                           |✔ | 
-| DELETE | /api/account_books/{bookId}/records/{recordId}            | 가계부 기록 삭제하기(with 가계부 잔고 복원 ) |                                           |✔ | 
+| DELETE    | /api/v1/**account_books**/{postId}             | 가계부 삭제 |   |✔ | 
+| GET | /api/account_books/{bookId}/**records**/{recordId}             | 가계부 기록 조회  |                                           | ✔| 
+| GET | /api/account_books/{bookId}/**records**           | 가계부 기록 리스트 보기(최신순,20개) |                                           |✔ | 
+| POST | /api/account_books/{bookId}/**records**/          | 가계부 기록 쓰기 |                                           |✔ | 
+| PATCH |/api/account_books/{bookId}/**records**/{recordId}       | 가계부 기록 수정(with 가계부 잔고 수정) |{"money": "string", "memo":"string", "act":"string", "expendType":"string", "day":"string"}                                           |✔ | 
+| DELETE | /api/account_books/{bookId}/**records**/{recordId}            | 가계부 기록 삭제하기(with 가계부 잔고 복원 ) |                                           |✔ | 
 
 
