@@ -24,7 +24,7 @@ import springfox.documentation.annotations.ApiIgnore;
 @RestController
 @RequiredArgsConstructor
 @Slf4j
-@RequestMapping("/api/accountBooks")
+@RequestMapping("/api/account_books")
 public class AccountBookController {
 
     private final AccountBookService accountBookService;
@@ -37,6 +37,7 @@ public class AccountBookController {
   "title": "거누의 가계부"
 }
     * */
+    @ApiOperation("가계부 생성 API")
     @PostMapping
     public Response makeAccountBook(@RequestBody AccountAddDto addRequest, @ApiIgnore Authentication authentication) {
         log.info("가계부 등록 인증인 email : {}" , authentication.getName());
@@ -44,6 +45,7 @@ public class AccountBookController {
         return Response.success(response);
     }
 
+    @ApiOperation("가계부 수정 API")
     @PatchMapping("/{id}")
     public Response modifyAccountBook(@PathVariable Long id, @RequestBody AccountModifyDto modifyRequest, @ApiIgnore Authentication authentication) {
         log.info("가계부 수정 인증인 email : {}" , authentication.getName());
@@ -51,6 +53,7 @@ public class AccountBookController {
         return Response.success(response);
     }
 
+    @ApiOperation("가계부 삭제 API")
     @DeleteMapping("/{id}")
     public Response removeAccountBook(@PathVariable Long id, @ApiIgnore Authentication authentication) {
         log.info("가계부 삭제 인증인 email : {}" , authentication.getName());
@@ -58,9 +61,9 @@ public class AccountBookController {
         return Response.success(response);
     }
 
-
+    @ApiOperation("가계부 단건 조회 API")
     @GetMapping("/{id}")
-    public Response getOneAccountBook(@PathVariable Long id, @ApiIgnore Authentication authentication) {
+    public Response<AccountSelectResponse> getOneAccountBook(@PathVariable Long id, @ApiIgnore Authentication authentication) {
         log.info("가계부 단건 조회 인증인 email : {}" , authentication.getName());
         AccountSelectResponse response = accountBookService.getBook(id, authentication.getName());
         return Response.success(response);

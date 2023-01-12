@@ -8,7 +8,7 @@ import javax.validation.constraints.Email;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter @ToString
+@Getter @Builder
 public class UserJoinDto {
     private String userName;
     private String email;

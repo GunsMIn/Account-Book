@@ -28,33 +28,33 @@ public class AccountBookService {
 
     private final UserRepository userRepository;
     private final AccountBookRepository accountBookRepository;
+    private final ValidateService validateService;
 
-    /**authentication.getName() 으로 해당 user 유뮤 검사 메서드**/
-    private User getUser(String email) {
-        /*user 찾기*/
-        return userRepository.findByEmail(email).orElseThrow(()
-                -> new UserException(ErrorCode.EMAIL_NOT_FOUND, ErrorCode.EMAIL_NOT_FOUND.getMessage()));
-    }
-    /**가계부 id로 해당 AccountBook 유뮤 검사 메서드**/
-    private AccountBook getAccountBook(Long id) {
-        return accountBookRepository.findById(id).orElseThrow(()
-                -> new AccountException(ErrorCode.ACCOUNTBOOK_NOT_FOUND, ErrorCode.ACCOUNTBOOK_NOT_FOUND.getMessage()));
-    }
-
-    /**가계부 생성**/
+    /**
+     * request에 담긴 가계부 정보로 가계부 생성을 진행하는 메서드
+     *
+     * @param accountAddDto 제목 / 메모 / 잔고
+     * @return AccountAddResponse 반환
+     */
     public AccountAddResponse makeBook(AccountAddDto accountAddDto, String email) {
-        User user = getUser(email);
+        User user = validateService.getUser(email);
         AccountBook accountBook = accountAddDto.toEntity(user);
         AccountBook savedAccountBook = accountBookRepository.save(accountBook);
         return AccountAddResponse.of(savedAccountBook);
     }
 
-    /**가계부 수정**/
+    /**
+     * id(가계부id)로 해당 가계부 조회 후
+     * request에 담긴 가계부 수정 정보로 가계부 수정을 진행하는 메서드
+     *
+     * @param modifyRequest 제목 / 메모 / 잔고
+     * @return AccountModifyResponse 반환
+     */
     public AccountModifyResponse updateBook(Long id, AccountModifyDto modifyRequest, String email) {
         /*USER 반환 : User 존재 우무 확인 메서드*/
-        User user = getUser(email);
+        User user = validateService.getUser(email);
         /*수정 전 엔티티*/
-        AccountBook accountBook = getAccountBook(id);
+        AccountBook accountBook = validateService.getAccountBook(id);
         /*권한 체크 로직 : 자신의 가계부만 수정 가능*/
         if (user.getId() != accountBook.getUser().getId()) {
             throw new UserException(ErrorCode.INVALID_PERMISSION,ErrorCode.INVALID_PERMISSION.getMessage());
@@ -67,10 +67,16 @@ public class AccountBookService {
     }
 
 
+    /**
+     * id(가계부id)로 해당 가계부 조회 후
+     * 가계부 삭제를 진행하는 메서드
+     *
+     * @return AccountBookDeleteResponse 반환
+     */
     public AccountBookDeleteResponse deleteBook(Long id, String email) {
         /*USER 반환 : User 존재 우무 확인 메서드*/
-        User user = getUser(email);
-        AccountBook accountBook = getAccountBook(id);
+        User user = validateService.getUser(email);
+        AccountBook accountBook = validateService.getAccountBook(id);
         if (user.getId() != accountBook.getUser().getId()) {
             throw new UserException(ErrorCode.INVALID_PERMISSION, ErrorCode.INVALID_PERMISSION.getMessage());
         }
@@ -79,18 +85,31 @@ public class AccountBookService {
         return AccountBookDeleteResponse.of(id);
     }
 
+    /**
+     * id(가계부id)로 해당 가계부 단건 조회
+     *
+     * @return AccountSelectResponse 반환
+     */
+    @Transactional(readOnly = true)
     public AccountSelectResponse getBook(Long id, String email) {
         /*USER 반환 : User 존재 우무 확인 메서드*/
-        User user = getUser(email);
-        AccountBook accountBook = getAccountBook(id);
+        User user = validateService.getUser(email);
+        AccountBook accountBook = validateService.getAccountBook(id);
         if (user.getId() != accountBook.getUser().getId()) {
             throw new UserException(ErrorCode.INVALID_PERMISSION, ErrorCode.INVALID_PERMISSION.getMessage());
         }
         return AccountSelectResponse.of(accountBook);
     }
 
+    /**
+     * @param pageable 페이징 request
+     * @param email 로 해당 user조회 후 해당 user의 AccountBook 페이징 조회
+     *
+     * @return Page<AccountSelectResponse> 반환
+     */
+    @Transactional(readOnly = true)
     public Page<AccountSelectResponse> getBooks(Pageable pageable, String email) {
-        User user = getUser(email);
+        User user = validateService.getUser(email);
         Page<AccountBook> accountBooks = accountBookRepository.findByUser(user, pageable);
         return AccountSelectResponse.of(accountBooks);
     }

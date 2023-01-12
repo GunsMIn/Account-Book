@@ -43,12 +43,12 @@ public class UserController {
     }
 
     //로그인 컨트롤러
-    @ApiOperation(value = "로그인", notes = "로그인 성공 후 JWT토큰 발급")
+    @ApiOperation(value = "로그인", notes = "로그인 성공 후 JWT토큰 / Refresh Token 발급")
     @PostMapping("/login")
     public Response<UserLoginResponse> login(@RequestBody UserLoginDto userLoginDto) {
         log.info("loginEmail : {}", userLoginDto.getEmail());
-        String token = userService.login(userLoginDto.getEmail(), userLoginDto.getPassword());
-        return Response.success(new UserLoginResponse(token)); // 로그인 성공 시 토큰만 반환
+        UserLoginResponse response = userService.login(userLoginDto.getEmail(), userLoginDto.getPassword());
+        return Response.success(response); // 로그인 성공 시 토큰만 반환
     }
 
 }

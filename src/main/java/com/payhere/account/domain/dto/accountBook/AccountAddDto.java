@@ -2,14 +2,11 @@ package com.payhere.account.domain.dto.accountBook;
 
 import com.payhere.account.domain.entity.AccountBook;
 import com.payhere.account.domain.entity.User;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter @ToString
+@Getter @Builder
 public class AccountAddDto {
 
     private String title;
