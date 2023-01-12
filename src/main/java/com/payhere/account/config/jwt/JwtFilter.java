@@ -22,6 +22,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
+
 @RequiredArgsConstructor
 @Slf4j
 public class JwtFilter extends OncePerRequestFilter {
@@ -38,6 +39,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
         // AUTHORIZATION에 있는 Token을 꺼냅니다.
         try {
+
             String userName = JwtUtil.getUserName(token, secretKey);
             log.info("userName = {}", userName);
 
