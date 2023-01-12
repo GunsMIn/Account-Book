@@ -38,8 +38,8 @@ public class SwaggerConfig extends WebMvcConfigurationSupport {
     public Docket api() {
         return new Docket(DocumentationType.OAS_30)
                 .apiInfo(new ApiInfoBuilder()
-                        .title("SNS Personal Project Swagger")
-                        .description("페이히어 과제전형 API입니다")
+                        .title("가계부 Project Swagger")
+                        .description("가계부 기록 API입니다")
                         .version("1.0.0")
                         .build())
                 .securityContexts(Arrays.asList(securityContext()))
