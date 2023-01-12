@@ -11,7 +11,8 @@
 **Spring Security 인증 / 인가 필터 구현** | :heavy_check_mark: |  
 **회원가입 / 로그인 구현 (JWT 토큰 발급)** | :heavy_check_mark: |  
 **가계부(AccountBook) 작성, 수정, 삭제, 리스트** | :heavy_check_mark: |  
-**가계부 기록(Record) 작성, 수정, 삭제, 리스트** | :heavy_check_mark: |  
+**가계부 기록(Record) 작성, 수정, 삭제, 복원,리스트** | :heavy_check_mark: |  
+**가계부 기록 수정, 삭제, 복원 시 가계부 잔고 정상적인 계산 로직** | :heavy_check_mark: | 
 **AWS EC2에 Docker 배포** | :heavy_check_mark: |  
 **Gitlab CI & Crontab CD** | :heavy_check_mark: 
 
@@ -47,4 +48,42 @@
 | PATCH |/api/account_books/{bookId}/**records**/{recordId}       | 가계부 기록 수정(with 가계부 잔고 수정) |{"money": "string", "memo":"string", "act":"string", "expendType":"string", "day":"string"}                                           |✔ | 
 | DELETE | /api/account_books/{bookId}/**records**/{recordId}            | 가계부 기록 삭제하기(with 가계부 잔고 복원 ) |                                           |✔ | 
 
+## USER(회원)
+### 1. 회원가입 (POST) : /api/**users**/join 
+> - 이메일 중복 체크하여 회원가입
+> - 비밀번호 암호화 진행 후 DB에 저장
+> - 엔티티와 DTO의 분리로 API 스펙의 유지
+ 
+ ### 2. 로그인 (POST) : /api/**users**/login 
+> - 회원가입 진행 후 email 유무 확인 
+> - 비밀번호 일치/불일치 확인 작업
+> - 위 2개의 검증이 끝난 후 jwt와 refresh token을 반환
+> - 엔티티와 DTO의 분리로 API 스펙의 유지 
+ ## Account_Book(가계부)
+  ### 3. 가계부 생성 (POST) : /api/**account_books** 
+> - 인증된 사용자 인지 확인
+> - 로그인하지 않은 고객은 가계부 내역에 대한 접근 제한 처리
+> - 가계부 잔고(balance) , 제목(title) , 메모(memo)를 작성하여 가계부 생성
+> - 엔티티와 DTO의 분리로 API 스펙의 유지
+   ### 4. 가계부 수정 (PATCH) : /api/**account_books**/{id} 
+> - 인증된 사용자 인지 확인(가계부 생성한 사람인지 타인인지 검증)
+> - 로그인하지 않은 고객은 가계부 수정에 대한 접근 제한 처리
+> - id로 해당 가계부 조회 후 Dirty check를 이용하여 가계부 잔고(balance) , 제목(title) , 메모(memo) 수정
+> - 엔티티와 DTO의 분리로 API 스펙의 유지
 
+ ### 5. 가계부 삭제 (DELETE) : /api/**account_books**/{id} 
+> - 인증된 사용자 인지 확인(가계부 생성한 사람인지 타인인지 검증)
+> - 로그인하지 않은 고객은 가계부 삭제에 대한 접근 제한 처리
+> - id로 해당 가계부 조회 후 해당 가계부 삭제 처리
+
+   ### 6. 가계부 단건 조회 (GET) : /api/**account_books**/{id} 
+> - 인증된 사용자 인지 확인
+> - 로그인하지 않은 고객은 가계부 조회에 대한 접근 제한 처리
+> - id로 해당 가계부 조회 
+> - 엔티티와 DTO의 분리로 API 스펙의 유지
+
+   ### 7. 가계부 전체 조회 (GET) : /api/**account_books**
+> - 인증된 사용자 인지 확인
+> - 최신순으로 작성한 가계부 페이징 처리 조회(COUNT : 5)
+> - 로그인한 사용자 조회 후 가계부 리스트 조회
+> - 엔티티와 DTO의 분리로 API 스펙의 유지
