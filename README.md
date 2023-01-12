@@ -16,6 +16,7 @@
 **Gitlab CI & Crontab CD** | :heavy_check_mark: 
 
 # ERD 다이어그램
+<img width="420" alt="12" src="https://user-images.githubusercontent.com/104709432/211974589-318b4921-a077-42b0-974e-2c2b8aafe435.PNG">
 
 
 ### 테스트 전용 로그인 회원
