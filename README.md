@@ -92,11 +92,14 @@
   ### 3. 가계부 기록 쓰기 (POST) : /api/account_books/{bookId}/**records** 
 > - 인증된 사용자 인지 확인
 > - 가계부 기록을 위한 ACT(행위) , ExpendType(지출 종류) , Day(요일) 을 **Enum**으로 제작
+- Act
 ```java
 public enum Act {
     SPENDING("지출"), SAVING("저축");
    }
 ```
+- Act("지출","저축")에 해당하지 않는 요청값들어올 시 RecordException(ErrorCode.Act) [406 상태코드 반환]
+- ExpendType 
 ```java
 public enum ExpendType {
     FOOD_EXPENSE("식비"),
