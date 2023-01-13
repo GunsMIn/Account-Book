@@ -89,7 +89,7 @@
 > - 엔티티와 DTO의 분리로 API 스펙의 유지
 
 ## Record(가계부 기록)
-  ### 3. 가계부 기록 쓰기 (POST) : /api/account_books/{bookId}/**records** 
+  ### 8. 가계부 기록 쓰기 (POST) : /api/account_books/{bookId}/**records** 
 > - 인증된 사용자 인지 확인
 > - 가계부 기록을 위한 ACT(행위) , ExpendType(지출 종류) , Day(요일) 을 **Enum**으로 제작
 - Act
@@ -99,7 +99,6 @@ public enum Act {
    }
 ```
 - Act("지출","저축")에 해당하지 않는 요청값들어올 시 RecordException(ErrorCode.Act) [406 상태코드 반환]
-- ExpendType 
 ```java
 public enum ExpendType {
     FOOD_EXPENSE("식비"),
@@ -127,3 +126,32 @@ public enum Day {
     }
 ```
 - DAY("월","화","수","목","금","토","일")에 해당하지 않는 요청값들어올 시 RecordException(ErrorCode.DAY_FAULT) [406 상태코드 반환]
+
+  ### 9. 가계부 기록 수정 (PATCH) : /api/account_books/{bookId}/**records**/{recordId}
+> - 인증된 사용자 인지 확인
+> - 가계부 기록을 위한 ACT(행위) , ExpendType(지출 종류) , Day(요일) 을 **Enum**으로 제작
+> - 영속성 컨텍스트의 스냅샷을 이용한 Dirty Check(변경감지)를 이용한 수정
+> - 가계부 기록의 money의 지출 / 저축에 따라 가계부(account_book)의 잔고(balance) 또한 수정
+
+  ### 10. 가계부 기록 삭제 (DELETE) : /api/account_books/{bookId}/**records**/{recordId} 
+> - 인증된 사용자 인지 확인
+> - 가계부 기록 삭제한 후에 복원할 수 있는 Soft Delete 방식 채택
+> - 엔티티에 deleted_at 필드를 추가하고 @SQLDelete(sql = "UPDATE Record SET deleted_at = now() WHERE id = ?")를 사용하여 삭제 시 해당 시간으로 삭제시간 값 들어감
+> - 삭제시간이 존재할 시 -> 삭제된 기록 / 삭제시간이 Null일 시 존재하는 기록
+> > - 조회 시 @Where(clause = "deleted_at is null")가 조회 시 자동으로 조건으로 붙어서 존재하는 기록만 조회 가능
+> - 가계부 기록(Record)을 삭제 시 가계부(Account_Book)의 잔고(balance) 또한 복원 기능  
+
+  ### 11. 가계부 기록 복원 (POST) : /api/account_books/{bookId}/**records**/{recordId}/restore 
+> - 인증된 사용자 인지 확인
+> - 가계부 기록 삭제한 후에 복원할 수 있는 Soft Delete 방식 채택
+> - @PathVaraible 로 들어온 id로 해당 삭제된 가계부 기록(Record)를 조회 후 삭제시간을 다시 Null로 만들어줌 => 가계부 기록 복원
+> - 가계부 기록(Record)을 복원 시 가계부(Account_Book)의 잔고(balance) 또한 복원 기능
+
+  ### 12. 가계부 기록 단건 조회 (GET) : /api/account_books/{bookId}/**records**/{recordId}
+> - 인증된 사용자 인지 확인
+> - @PathVaraible 로 들어온 id로 해당 가계부 기록 단건 조회
+
+  ### 13. 가계부 기록 페이징 조회 (GET) : /api/account_books/{bookId}/**records**
+> - 인증된 사용자 인지 확인
+> - 인증된 사용자의 가계부 기록 20개 최신순으로 페이징 조회
+
