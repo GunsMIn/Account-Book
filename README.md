@@ -46,7 +46,8 @@
 | GET | /api/account_books/{bookId}/**records**           | 가계부 기록 리스트 보기(최신순,20개) |                                           |✔ | 
 | POST | /api/account_books/{bookId}/**records**/          | 가계부 기록 쓰기 |{"money": "string", "memo":"string", "act":"string", "expendType":"string", "day":"string"}                                           |✔ | 
 | PATCH |/api/account_books/{bookId}/**records**/{recordId}       | 가계부 기록 수정(with 가계부 잔고 수정) |{"money": "string", "memo":"string", "act":"string", "expendType":"string", "day":"string"}                                           |✔ | 
-| DELETE | /api/account_books/{bookId}/**records**/{recordId}            | 가계부 기록 삭제하기(with 가계부 잔고 복원 ) |                                           |✔ | 
+| DELETE | /api/account_books/{bookId}/**records**/{recordId}            | 가계부 기록 삭제하기(with 가계부 잔고 복원 ) |                                           |✔ |
+| POST | /api/account_books/{bookId}/**records**/{recordId}/resave            | 가계부 삭제된 기록 복원하기 (with 가계부 잔고 복원 ) |                                           |✔ |
 
 ## USER(회원)
 ### 1. 회원가입 (POST) : /api/**users**/join 
