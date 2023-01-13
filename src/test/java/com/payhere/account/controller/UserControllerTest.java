@@ -1,15 +1,13 @@
 package com.payhere.account.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.payhere.account.config.jwt.JwtUtil;
 import com.payhere.account.domain.Response.user.UserLoginResponse;
 import com.payhere.account.domain.dto.user.UserJoinDto;
 import com.payhere.account.domain.dto.user.UserLoginDto;
 import com.payhere.account.domain.entity.User;
 import com.payhere.account.exception.ErrorCode;
-import com.payhere.account.exception.UserException;
+import com.payhere.account.exception.customException.UserException;
 import com.payhere.account.service.UserService;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,10 +19,8 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -60,7 +56,6 @@ class UserControllerTest {
                 .password("1234")
                 .build();
 
-
         User userEntity = User.builder()
                 .id(100L)
                 .email(request.getEmail())
@@ -81,6 +76,7 @@ class UserControllerTest {
                 .andExpect(jsonPath("$.result.userId").value(100L))
                 .andExpect(jsonPath("$.result.email").exists())
                 .andDo(print());
+        verify(userService, times(1)).join(any());
 
     }
 
@@ -106,6 +102,7 @@ class UserControllerTest {
                 .content(objectMapper.writeValueAsBytes(request)))
                 .andDo(print())
                 .andExpect(status().is(ErrorCode.DUPLICATED_EMAIL.getStatus().value()));
+        verify(userService, times(1)).join(any());
     }
 
     //로그인 성공했을 때 테스트
@@ -135,6 +132,7 @@ class UserControllerTest {
                 .andExpect(jsonPath("$.resultCode").value("SUCCESS"))
                 .andExpect(jsonPath("$.result.jwt").exists())
                 .andExpect(jsonPath("$.result.refreshToken").exists());
+        verify(userService, times(1)).login(any(),any());
     }
 
     //userName이 존재하지 않을 때 테스트
@@ -157,6 +155,7 @@ class UserControllerTest {
                 .content(objectMapper.writeValueAsBytes(userLoginRequest)))
                 .andDo(print())
                 .andExpect(status().is(ErrorCode.EMAIL_NOT_FOUND.getStatus().value()));
+        verify(userService, times(1)).login(any(),any());
     }
 
     //password틀렸을 때 테스트
@@ -168,7 +167,6 @@ class UserControllerTest {
                 .email("김건우")
                 .password("1234")
                 .build();
-
         //login 메서드를 사용하면 INVALID_PASSWORD 에러를 일으킬 것
         when(userService.login(any(), any()))
                 .thenThrow(new UserException(ErrorCode.INVALID_PASSWORD));
@@ -179,5 +177,6 @@ class UserControllerTest {
                 .content(objectMapper.writeValueAsBytes(userLoginRequest)))
                 .andDo(print())
                 .andExpect(status().is(ErrorCode.INVALID_PASSWORD.getStatus().value()));
+        verify(userService, times(1)).login(any(),any());
     }
 }

@@ -5,7 +5,7 @@ import com.payhere.account.config.encrypt.EncrypterConfig;
 import com.payhere.account.domain.Response.accountBook.AccountAddResponse;
 import com.payhere.account.domain.Response.accountBook.AccountSelectResponse;
 import com.payhere.account.domain.dto.accountBook.AccountAddDto;
-import com.payhere.account.exception.AccountException;
+import com.payhere.account.exception.customException.AccountException;
 import com.payhere.account.exception.ErrorCode;
 import com.payhere.account.service.AccountBookService;
 import org.junit.jupiter.api.DisplayName;
@@ -20,12 +20,8 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.web.context.WebApplicationContext;
-
-import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
@@ -184,7 +180,6 @@ class AccountBookControllerTest {
                     .content(objectMapper.writeValueAsBytes(request)))
                     .andDo(print())
                     .andExpect(status().isUnauthorized());
-
             verify(accountBookService, never()).makeBook(any(), any());
         }
     }
