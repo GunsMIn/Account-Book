@@ -92,6 +92,7 @@
   ### 8. 가계부 기록 쓰기 (POST) : /api/account_books/{bookId}/**records** 
 > - 인증된 사용자 인지 확인
 > - 가계부 기록을 위한 ACT(행위) , ExpendType(지출 종류) , Day(요일) 을 **Enum**으로 제작
+ 가계부 기록 Request 제한 
 - Act
 ```java
 public enum Act {
@@ -133,6 +134,40 @@ public enum Day {
 > - 영속성 컨텍스트의 스냅샷을 이용한 Dirty Check(변경감지)를 이용한 수정
 > - 가계부 기록의 money의 지출 / 저축에 따라 가계부(account_book)의 잔고(balance) 또한 수정
 
+가계부 기록 수정 Request 제한 
+- Act
+```java
+public enum Act {
+    SPENDING("지출"), SAVING("저축");
+   }
+```
+- Act("지출","저축")에 해당하지 않는 요청값들어올 시 RecordException(ErrorCode.Act) [406 상태코드 반환]
+```java
+public enum ExpendType {
+    FOOD_EXPENSE("식비"),
+    LIVING_EXPENSE("생활용품비"),
+    TRANSPORT_EXPENSE("교통비"),
+    CLOTHING_EXPENSE("의류비"),
+    HOSPITAL_EXPENSE("병원비"),
+    ENTERTAIN_EXPENSE("유흥비"),
+    CHILDCARE_EXPENSE("놀이비"),
+    PHONE_EXPENSE("통신비"),
+    UTILITY_EXPENSE("공과금"),
+    ETC_EXPENSE("기타비용");
+    }
+```
+- ExpendType("식비","생활용품비","교통비","의류비","병원비","유흥비","놀이비","통신비","공과금","기타비용")에 해당하지 않는 요청값들어올 시 RecordException(ErrorCode.EXPENDTYPE_FAULT) [406 상태코드 반환]
+```java
+public enum Day {
+    MONDAY("월"),
+    TUESDAY("화"),
+    WEDNESDAY("수"),
+    THURSDAY("목"),
+    FRIDAY("금"),
+    SATURDAY("토"),
+    SUNDAY("일");
+    }
+```
   ### 10. 가계부 기록 삭제 (DELETE) : /api/account_books/{bookId}/**records**/{recordId} 
 > - 인증된 사용자 인지 확인
 > - 가계부 기록 삭제한 후에 복원할 수 있는 Soft Delete 방식 채택
