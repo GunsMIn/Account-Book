@@ -1,7 +1,7 @@
 package com.payhere.account.domain.entity.type;
 
 import com.payhere.account.exception.ErrorCode;
-import com.payhere.account.exception.RecordException;
+import com.payhere.account.exception.customException.RecordException;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

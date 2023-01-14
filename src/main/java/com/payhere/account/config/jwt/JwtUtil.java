@@ -24,7 +24,7 @@ public class JwtUtil {
         return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token)
                 .getBody().getExpiration().before(new Date());
     }
-
+    //토큰 생성 메서드
     public static String createJwt(User user, String secretKey) {
         Claims claims = Jwts.claims();
         claims.put("userName", user.getEmail());
