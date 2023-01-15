@@ -20,7 +20,10 @@
 - **User : 회원 테이블**
 - **Account_Book : 가계부 테이블**
 - **Record : 가계부 기록 테이블**
-<img width="500" alt="다이어그램" src="https://user-images.githubusercontent.com/104709432/211975196-96e9687a-32af-4ba7-bf7b-5f0b63fd9f14.PNG">
+<br>
+
+![다이어그램 drawio](https://user-images.githubusercontent.com/104709432/212534539-4ae2b83a-5bda-45ac-88b7-79cbd5b2a21d.png)
+
 
 
 
