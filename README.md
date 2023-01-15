@@ -52,7 +52,7 @@
   - balance : 잔고
 - **record : 가계부 기록 테이블**
   - record_id : Primary key 
-  - money : 돈 
+  - money : 돈 (지출 할 돈/ 저축 할 돈)
   - memo : 가계부 기록 시 메모 
   - act : 기록 행위(지출 / 저축)
   - expend_type : 지출 / 저축 종류
