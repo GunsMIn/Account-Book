@@ -17,7 +17,7 @@ public class UserJoinDto {
                 .name(userName)
                 .email(email)
                 .password(encodePassword)
-                .role(UserRole.ROLE_USER)
+                .role(UserRole.USER)
                 .build();
     }
 
@@ -26,7 +26,7 @@ public class UserJoinDto {
                 .name(userName)
                 .email(email)
                 .password(encodePassword)
-                .role(UserRole.ROLE_ADMIN)
+                .role(UserRole.ADMIN)
                 .build();
     }
 

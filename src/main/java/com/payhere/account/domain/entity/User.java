@@ -51,6 +51,14 @@ public class User extends BaseEntity implements UserDetails  {
         this.password = password;
     }
 
+    /**user의 권한 변경 dirty check**/
+    public User(UserRole role) {
+        this.role = role;
+    }
+    public void changeRole(UserRole role) {
+        this.role = role;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(this.getRole().name()));
