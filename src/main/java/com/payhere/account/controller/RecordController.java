@@ -28,7 +28,7 @@ public class RecordController {
     @ApiOperation("가계부 기록 쓰기 지출/저축 API")
     @PostMapping("/{bookId}/records")
     public Response saveOrSpend(@PathVariable Long bookId, @RequestBody RecordDto recordDto, @ApiIgnore Authentication authentication) {
-        RecordResponse response = recordService.addOrMinus(bookId, recordDto, authentication.getName());
+        RecordResponse response = recordService.spendOrSave(bookId, recordDto, authentication.getName());
         return Response.success(response);
     }
 

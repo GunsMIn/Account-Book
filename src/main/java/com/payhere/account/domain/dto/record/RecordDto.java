@@ -6,14 +6,12 @@ import com.payhere.account.domain.entity.User;
 import com.payhere.account.domain.entity.type.Act;
 import com.payhere.account.domain.entity.type.Day;
 import com.payhere.account.domain.entity.type.ExpendType;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
+@Builder
 @ToString
 public class RecordDto {
 

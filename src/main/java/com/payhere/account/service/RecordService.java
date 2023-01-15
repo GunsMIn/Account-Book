@@ -42,17 +42,16 @@ public class RecordService {
      *
      * @return RecordResponse 반환
      */
-    public RecordResponse addOrMinus(Long bookId, RecordDto recordDto, String email) {
+    public RecordResponse spendOrSave(Long bookId, RecordDto recordDto, String email) {
         User user = validateService.getUser(email);
         AccountBook accountBook = validateService.getAccountBook(bookId);
         validateService.checkAuthority(user, accountBook);
 
         Record record = recordDto.toEntity(user, accountBook, recordDto.getAct(), recordDto.getExpendType(), recordDto.getDay());
+        /*저축일때 지출일때 나누어서 해당 가계부의 잔고(balance) +,- 로직🔽*/
         if (recordDto.getAct().equals(Act.SAVING.getDescription())) {
-            log.info("저축메소드");
             accountBook.addMoney(recordDto.getMoney());
         } else if (recordDto.getAct().equals(Act.SPENDING.getDescription())) {
-            log.info("지출메소드");
             accountBook.minusMoney(recordDto.getMoney());
         }else{
             throw new RecordException(ErrorCode.RECORD_FAULT, ErrorCode.RECORD_FAULT.getMessage());
