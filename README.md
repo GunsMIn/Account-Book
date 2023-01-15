@@ -296,3 +296,5 @@ public enum Day {
 
 <img width="845" alt="JOCOCOTEST" src="https://user-images.githubusercontent.com/104709432/212541689-78a3dbb8-d2cc-4c74-9527-1399b78a434b.PNG">
 
+## 설계
+가계부 기능에 관련된 API의 요구사항을 보면서 우선 회원테이블 , 가계부 테이블 그리고 가계부에 대한 글 작성을 할 수 있는 가계부 기록테이블을 생각하게되었다. 회원(user)과 가계부(account_book)은 1 대 다 관계로 가계부(account_book)테이블이 회원의 PK(user_id)를 참조키로 갖게 설계하였고 또한 회원과  가계부 기록(record) 도 1 대 다 관계이므로 기록(record)테이블도 회원의 PK(user_id)를 참조키로 갖게 설계하였다. 가계부(account_book)와 가계부 기록(record)도 1 대 다 관계로 설계하여 기록(record)테이블에서 가계부의 PK(account_book_id)를 참조키로 갖게 설계하였다. 삭제에서는 논리 삭제를 구현하기위해 soft-delete 방법을 채택하였다. 따라서 각 테이블에 deleted_at이라는 컬럼을 추가하여 삭제 시에는 이 컬럼에 현재시간의 값이 들어갈 수 있게 설계하였다.
