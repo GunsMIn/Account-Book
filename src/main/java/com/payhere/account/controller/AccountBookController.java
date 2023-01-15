@@ -29,14 +29,6 @@ public class AccountBookController {
 
     private final AccountBookService accountBookService;
 
-
-    /*
-    * {
-  "balance": 1000000,
-  "memo": "2023년 가계부",
-  "title": "거누의 가계부"
-}
-    * */
     @ApiOperation("가계부 생성 API")
     @PostMapping
     public Response makeAccountBook(@RequestBody AccountAddDto addRequest, @ApiIgnore Authentication authentication) {

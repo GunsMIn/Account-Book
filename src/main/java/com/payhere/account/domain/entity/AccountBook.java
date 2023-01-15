@@ -12,6 +12,7 @@ import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,22 +26,27 @@ import static javax.persistence.FetchType.*;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(name="account_book")
 @Where(clause = "deleted_at is null")
-@SQLDelete(sql = "UPDATE AccountBook SET deleted_at = now() WHERE id = ?")
+@SQLDelete(sql = "UPDATE account_book SET deleted_at = now() WHERE id = ?")
 public class AccountBook extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "account_book_id")
     private Long id;
 
+    @Column(nullable = false)
     private String title;
 
+    @Column(nullable = false)
     private String memo;
     //잔고
+    @Column(nullable = false)
     private Integer balance;
 
     @Column(name = "deleted_at")
-    private LocalDateTime deletedAt;
+    private Timestamp deletedAt;
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "user_id")
@@ -48,6 +54,8 @@ public class AccountBook extends BaseEntity {
 
     @OneToMany(mappedBy = "accountBook",cascade = REMOVE, orphanRemoval = true)
     private List<Record> records = new ArrayList<>();
+
+
 
 
     /**dirty check 수정 메서드(변경감지) **/
@@ -68,31 +76,34 @@ public class AccountBook extends BaseEntity {
     }
 
     /**가계부 기록 수정 시 잔고 변경 비지니스 메서드**/
+    /**지출시 잔고수정**/
     public void updateSpendMoney(Integer originMoney, Integer changedMoney) {
-        log.info("원래 ㅣ{}" , originMoney);
-        log.info("바뀐금액 ㅣ{}", changedMoney);
-        // 10000        5000   = +5000
         this.balance += (originMoney - changedMoney);
-        log.info("현재 balance :{}",balance);
     }
 
     public void updateSaveMoney(Integer originMoney, Integer changedMoney) {
-        log.info("원래 ㅣ{}" , originMoney);
-        log.info("바뀐금액 ㅣ{}", changedMoney);
-        // 100000        10000         5000   -> 110000 / 10500
         this.balance -= (originMoney - changedMoney);
-        log.info("현재 balance :{}",balance);
     }
 
     /**가계부 기록 삭제 시 가계부 잔고 복원 메서드**/
-    public void restore(Integer money, Act act) {
-        log.info("돈 :{}",money);
+    public void restoreBalance(Integer money, Act act) {
         if (act.equals(Act.SAVING)) {
             this.balance -= money;
         }else{
             this.balance += money;
         }
     }
+
+    /**가계부 기록 삭제  복원 시 가계부 잔고 복원 메서드**/
+    public void restoreBalanceResave(Integer money, Act act) {
+        if (act.equals(Act.SAVING)) {
+            this.balance += money;
+        }else{
+            this.balance -= money;
+        }
+    }
+
+
 
 
 }
