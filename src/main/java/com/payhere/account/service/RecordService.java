@@ -80,7 +80,7 @@ public class RecordService {
         /*수정 할 레코드 엔티티🔽*/
         Record record = validateService.getRecord(recordId);
         /*수정 변경감지🔽*/
-        Record updatedRecord = record.update(record.getMoney(), updateDto ,accountBook );
+        record.update(record.getMoney(), updateDto ,accountBook );
         return RecordUpdateResponse.of(record);
     }
 

@@ -19,7 +19,8 @@ public enum ExpendType {
     CHILDCARE_EXPENSE("놀이비"),
     PHONE_EXPENSE("통신비"),
     UTILITY_EXPENSE("공과금"),
-    ETC_EXPENSE("기타비용");
+    ETC_EXPENSE("기타비용"),
+    SAVE("저축");
 
     private final String name;
 
@@ -44,7 +45,9 @@ public enum ExpendType {
             return UTILITY_EXPENSE;
         }else if (value.equals(ETC_EXPENSE.getName())) {
             return ETC_EXPENSE;
-        }else{
+        }else if (value.equals(SAVE.getName())) {
+            return SAVE;
+        } else{
             throw new RecordException(ErrorCode.EXPEND_FAULT, ErrorCode.EXPEND_FAULT.getMessage());
         }
 
