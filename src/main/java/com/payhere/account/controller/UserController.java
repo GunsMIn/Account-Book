@@ -25,7 +25,7 @@ public class UserController {
 
     private final UserService userService;
 
-    @ApiOperation(value = "회원가입", notes = "회원가입 API")
+    @ApiOperation(value = "회원가입", notes = "email , password , name 으로 회원가입 진행 API")
     @PostMapping("/join")
     public Response<UserJoinResponse> join(@RequestBody UserJoinDto userJoinDto) {
         UserJoinResponse response = userService.join(userJoinDto);
