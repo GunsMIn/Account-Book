@@ -69,6 +69,20 @@ jacocoTestReport {
         // html 파일 위치 지정
         html.destination file('build/reports/myReport.html')
     }
+    // 리포트 작성 시 특정 파일 제외
+    afterEvaluate {
+        classDirectories.setFrom(
+                files(classDirectories.files.collect {
+                    fileTree(dir: it, excludes: [
+                            '**/AccountApplication*',
+                            '**/AccountApplicationTests',
+                            '**/Swagger*',
+                            '**/JpaAuditingConfig*'
+                    ])
+                })
+        )
+    }
+
     finalizedBy 'jacocoTestCoverageVerification'
 }
 
@@ -100,7 +114,13 @@ jacocoTestCoverageVerification {
                 value = 'TOTALCOUNT'
                 maximum = 200
             }
+
+// 검증 단계에서 파일 제외
+            excludes = [
+                    '**.*AccountApplication*',
+                    '**.*Swagger*',
+                    '**.*JpaAuditing*'
+            ]
         }
     }
 }
-
