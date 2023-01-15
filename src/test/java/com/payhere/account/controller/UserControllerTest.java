@@ -1,6 +1,7 @@
 package com.payhere.account.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.payhere.account.domain.Response.user.UserJoinResponse;
 import com.payhere.account.domain.Response.user.UserLoginResponse;
 import com.payhere.account.domain.dto.user.UserJoinDto;
 import com.payhere.account.domain.dto.user.UserLoginDto;
@@ -54,16 +55,17 @@ class UserControllerTest {
                 .builder()
                 .email("gunwoo@naver.com")
                 .password("1234")
+                .userName("김건우")
                 .build();
 
-        User userEntity = User.builder()
-                .id(100L)
+        UserJoinResponse response = UserJoinResponse.builder()
+                .userId(100L)
                 .email(request.getEmail())
-                .password(request.getPassword())
+                .userName("김건우")
                 .build();
 
         when(userService.join(any()))
-                .thenReturn(userEntity);
+                .thenReturn(response);
 
         String url = "/api/users/join";
         mockMvc.perform(post(url).with(csrf())
@@ -110,7 +112,6 @@ class UserControllerTest {
     @DisplayName("로그인 성공")
     @WithMockUser
     void 로그인_성공() throws Exception {
-        //
         UserLoginDto userLoginRequest = UserLoginDto.builder()
                 .email("김건우")
                 .password("1234")
