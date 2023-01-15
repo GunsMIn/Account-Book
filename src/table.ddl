@@ -8,6 +8,7 @@ CREATE TABLE `user` (
   `role` varchar(255) NOT NULL,
   `registeredAt` datetime(6) DEFAULT NULL,
   `updatedAt` datetime(6) DEFAULT NULL,
+  `deleted_at` datetime(6) DEFAULT NULL,
    PRIMARY KEY (`user_id`)
 )
 
