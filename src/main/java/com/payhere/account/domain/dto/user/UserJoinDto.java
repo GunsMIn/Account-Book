@@ -1,10 +1,8 @@
 package com.payhere.account.domain.dto.user;
 
 import com.payhere.account.domain.entity.User;
-import com.payhere.account.domain.entity.UserRole;
+import com.payhere.account.domain.entity.type.UserRole;
 import lombok.*;
-
-import javax.validation.constraints.Email;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -20,6 +18,15 @@ public class UserJoinDto {
                 .email(email)
                 .password(encodePassword)
                 .role(UserRole.ROLE_USER)
+                .build();
+    }
+
+    public User toEntityOfAdmin(String encodePassword) {
+        return User.builder()
+                .name(userName)
+                .email(email)
+                .password(encodePassword)
+                .role(UserRole.ROLE_ADMIN)
                 .build();
     }
 

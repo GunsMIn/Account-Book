@@ -25,28 +25,17 @@ public class UserController {
 
     private final UserService userService;
 
-    /*   {
-  "email": "medneter@naver.com",
-  "password": "string",
-
-}  */
-
-    //회원가입 컨트롤러
     @ApiOperation(value = "회원가입", notes = "회원가입 API")
     @PostMapping("/join")
     public Response<UserJoinResponse> join(@RequestBody UserJoinDto userJoinDto) {
-        log.info("userJoinRequest :{} ", userJoinDto);
-        User user = userService.join(userJoinDto);
-        log.info("user :{} ", user);
-        UserJoinResponse userJoinResponse = UserJoinResponse.of(user);
-        return Response.success(userJoinResponse);
+        UserJoinResponse response = userService.join(userJoinDto);
+        return Response.success(response);
     }
 
-    //로그인 컨트롤러
+
     @ApiOperation(value = "로그인", notes = "로그인 성공 후 JWT토큰 / Refresh Token 발급")
     @PostMapping("/login")
     public Response<UserLoginResponse> login(@RequestBody UserLoginDto userLoginDto) {
-        log.info("loginEmail : {}", userLoginDto.getEmail());
         UserLoginResponse response = userService.login(userLoginDto.getEmail(), userLoginDto.getPassword());
         return Response.success(response); // 로그인 성공 시 토큰만 반환
     }

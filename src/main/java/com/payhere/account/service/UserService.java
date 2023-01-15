@@ -2,11 +2,12 @@ package com.payhere.account.service;
 
 import com.payhere.account.config.jwt.JwtUtil;
 import com.payhere.account.config.redis.RedisDao;
+import com.payhere.account.domain.Response.user.UserJoinResponse;
 import com.payhere.account.domain.Response.user.UserLoginResponse;
 import com.payhere.account.domain.dto.user.UserJoinDto;
 import com.payhere.account.domain.entity.User;
 import com.payhere.account.exception.ErrorCode;
-import com.payhere.account.exception.UserException;
+import com.payhere.account.exception.customException.UserException;
 import com.payhere.account.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,21 +33,23 @@ public class UserService implements UserDetailsService {
     @Value("${jwt.token.secret}")
     private String secretKey;
 
-
-
-    /**회원가입**/
-    public User join(UserJoinDto userJoinDto) {
-        log.info("매개변수로 들어온 값 :{}", userJoinDto);
+    /**
+     * request에 담긴 회원 정보로 로그인을 진행하는 메서드
+     *
+     * @param userJoinDto 회원의 이름 , 이메일 , 비밀번호 저장
+     *
+     * BCryptPasswordEncoder로 비밀번호 암호화 후 DB저장
+     * @return  UserJoinResponse 반환
+     */
+    public UserJoinResponse join(UserJoinDto userJoinDto) {
         /*중복된 이메일인지 check🔽*/
         validateService.checkUserEmail(userJoinDto);
         //비밀번호 암호화
         String encodePassword = encoder.encode(userJoinDto.getPassword());
         log.info(encodePassword);
         User user = userJoinDto.toEntity(encodePassword);
-        log.info("user : {}" , user);
         User savedUser = userRepository.save(user);
-        log.info("저장된 회원 : {}",savedUser);
-        return savedUser;
+        return UserJoinResponse.of(savedUser);
     }
 
 
@@ -56,7 +59,7 @@ public class UserService implements UserDetailsService {
      *
      * @param email 로그인 이메일
      * @param password 로그인 비밀번호
-     * @return Token이 담겨있는 UserLoginResponse 반환
+     * @return JWT,refreshToken 이 담겨있는 UserLoginResponse 반환
      */
     //(1.아이디 존재 여부 2.비밀번호 일치 여부) -> 성공 시 토큰 응답
     public UserLoginResponse login(String email,String password) {
@@ -78,7 +81,8 @@ public class UserService implements UserDetailsService {
 
     /**UserDetailsService 메서드**/
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return null;
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new UserException(ErrorCode.USER_NOT_FOUND,ErrorCode.USER_NOT_FOUND.getMessage()));
     }
 }

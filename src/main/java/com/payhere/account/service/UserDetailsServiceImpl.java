@@ -1,7 +1,7 @@
 package com.payhere.account.service;
 
 import com.payhere.account.exception.ErrorCode;
-import com.payhere.account.exception.UserException;
+import com.payhere.account.exception.customException.UserException;
 import com.payhere.account.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
