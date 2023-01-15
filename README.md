@@ -3,6 +3,9 @@
 
 <br>
 
+## RestApi Swagger 
+### [http://ec2-3-39-231-24.ap-northeast-2.compute.amazonaws.com:8080/swagger-ui](http://ec2-3-39-231-24.ap-northeast-2.compute.amazonaws.com:8080/swagger-ui/index.html#/)</br>
+
 ## 개발환경
 
 <br>
@@ -245,4 +248,8 @@ public enum Day {
   ### 13. 가계부 기록 페이징 조회 (GET) : /api/account_books/{bookId}/**records**
 > - 인증된 사용자 인지 확인
 > - 인증된 사용자의 가계부 기록 20개 최신순으로 페이징 조회
+
+## Jacoco TestReport✅
+
+<img width="845" alt="JOCOCOTEST" src="https://user-images.githubusercontent.com/104709432/212541689-78a3dbb8-d2cc-4c74-9527-1399b78a434b.PNG">
 
