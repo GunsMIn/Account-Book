@@ -1,6 +1,4 @@
 # Account-Book(가계부  RestApi)
-## JPA를 이용한 RestApi 구현 / Spring Security  인증,인가 / JWT 토큰 / CI-CD구축 
-
 
 ***
 
@@ -17,12 +15,34 @@
 **Gitlab CI & Crontab CD** | :heavy_check_mark: 
 
 # ERD 다이어그램
-- **User : 회원 테이블**
-- **Account_Book : 가계부 테이블**
-- **Record : 가계부 기록 테이블**
 <br>
 
-![다이어그램 drawio](https://user-images.githubusercontent.com/104709432/212534539-4ae2b83a-5bda-45ac-88b7-79cbd5b2a21d.png)
+![다이어그램 drawio](https://user-images.githubusercontent.com/104709432/212534709-d11dfa46-c5ec-4a56-9288-ee4cd18c4fbc.png)
+
+</br>
+
+- **user : 회원 테이블**
+  - user_id : Primary key
+  - email : 이메일
+  - name : 회원 이름
+  - password: 비밀번호
+  - role : userRole(USER,ADMIN)
+- **account_book : 가계부 테이블**
+  - account_book_id : Primary key
+  - title : 가계부 제목
+  - memo : 가계부 머릿글 메모
+  - balance : 잔고
+- **record : 가계부 기록 테이블**
+  - record_id : Primary key 
+  - money : 돈 
+  - memo : 가계부 기록 시 메모 
+  - act : 기록 행위(지출 / 저축)
+  - expend_type : 지출 / 저축 종류
+  - day : 요일
+- **공통 컬럼**
+  - registerd_at : 생성 시간
+  - updated_at : 수정 시간
+  - deleted_at : 삭제 시간
 
 
 
@@ -95,15 +115,18 @@
 ## Record(가계부 기록)
   ### 8. 가계부 기록 쓰기 (POST) : /api/account_books/{bookId}/**records** 
 > - 인증된 사용자 인지 확인
-> - 가계부 기록을 위한 ACT(행위) , ExpendType(지출 종류) , Day(요일) 을 **Enum**으로 제작
- 가계부 기록 Request 제한 
-- Act
+> - 가계부 기록을 위한 **ACT(행위) , ExpendType(지출 종류) , Day(요일) 을 Enum으로 제작
+ 가계부 기록 Request 제한**
+***
+#### Act(기록 행위)
 ```java
 public enum Act {
     SPENDING("지출"), SAVING("저축");
    }
 ```
-- Act("지출","저축")에 해당하지 않는 요청값들어올 시 RecordException(ErrorCode.Act) [406 상태코드 반환]
+- Act("지출","저축")에 해당하지 않는 요청 값 들어올 시 RecordException(ErrorCode.Act) [406 상태코드 반환]
+***
+#### ExpendType(지출,저축 종류)
 ```java
 public enum ExpendType {
     FOOD_EXPENSE("식비"),
@@ -115,10 +138,14 @@ public enum ExpendType {
     CHILDCARE_EXPENSE("놀이비"),
     PHONE_EXPENSE("통신비"),
     UTILITY_EXPENSE("공과금"),
-    ETC_EXPENSE("기타비용");
+    ETC_EXPENSE("기타비용"),
+    SAVE("저축");
     }
 ```
-- ExpendType("식비","생활용품비","교통비","의류비","병원비","유흥비","놀이비","통신비","공과금","기타비용")에 해당하지 않는 요청값들어올 시 RecordException(ErrorCode.EXPENDTYPE_FAULT) [406 상태코드 반환]
+- ExpendType("식비","생활용품비","교통비","의류비","병원비","유흥비","놀이비","통신비","공과금","기타비용")에 해당하지 않는 요청 값 들어올 시 RecordException(ErrorCode.EXPENDTYPE_FAULT) [406 상태코드 반환]
+- 저축시에는 SAVE("저축") 입력
+***
+#### Day
 ```java
 public enum Day {
     MONDAY("월"),
@@ -130,22 +157,26 @@ public enum Day {
     SUNDAY("일");
     }
 ```
-- DAY("월","화","수","목","금","토","일")에 해당하지 않는 요청값들어올 시 RecordException(ErrorCode.DAY_FAULT) [406 상태코드 반환]
+- DAY("월","화","수","목","금","토","일")에 해당하지 않는 요청 값 들어올 시 RecordException(ErrorCode.DAY_FAULT) [406 상태코드 반환]
+***
 
   ### 9. 가계부 기록 수정 (PATCH) : /api/account_books/{bookId}/**records**/{recordId}
 > - 인증된 사용자 인지 확인
 > - 가계부 기록을 위한 ACT(행위) , ExpendType(지출 종류) , Day(요일) 을 **Enum**으로 제작
 > - 영속성 컨텍스트의 스냅샷을 이용한 Dirty Check(변경감지)를 이용한 수정
-> - 가계부 기록의 money의 지출 / 저축에 따라 가계부(account_book)의 잔고(balance) 또한 수정
-
-가계부 기록 수정 Request 제한 
-- Act
+> - 가계부 기록(Record)의 money가 수정되면 가계부(account_book)의 잔고(balance) 또한 수정
+> - 가계부 수정을 위한 **ACT(행위) , ExpendType(지출 종류) , Day(요일) 을 Enum으로 제작
+ 가계부 수정 Request 제한**
+***
+#### Act(기록 행위)
 ```java
 public enum Act {
     SPENDING("지출"), SAVING("저축");
    }
 ```
-- Act("지출","저축")에 해당하지 않는 요청값들어올 시 RecordException(ErrorCode.Act) [406 상태코드 반환]
+- Act("지출","저축")에 해당하지 않는 요청 값 들어올 시 RecordException(ErrorCode.Act) [406 상태코드 반환]
+***
+#### ExpendType(지출,저축 종류)
 ```java
 public enum ExpendType {
     FOOD_EXPENSE("식비"),
@@ -157,10 +188,14 @@ public enum ExpendType {
     CHILDCARE_EXPENSE("놀이비"),
     PHONE_EXPENSE("통신비"),
     UTILITY_EXPENSE("공과금"),
-    ETC_EXPENSE("기타비용");
+    ETC_EXPENSE("기타비용"),
+    SAVE("저축");
     }
 ```
-- ExpendType("식비","생활용품비","교통비","의류비","병원비","유흥비","놀이비","통신비","공과금","기타비용")에 해당하지 않는 요청값들어올 시 RecordException(ErrorCode.EXPENDTYPE_FAULT) [406 상태코드 반환]
+- ExpendType("식비","생활용품비","교통비","의류비","병원비","유흥비","놀이비","통신비","공과금","기타비용")에 해당하지 않는 요청 값 들어올 시 RecordException(ErrorCode.EXPENDTYPE_FAULT) [406 상태코드 반환]
+- 저축시에는 SAVE("저축") 입력
+***
+#### Day
 ```java
 public enum Day {
     MONDAY("월"),
@@ -172,13 +207,15 @@ public enum Day {
     SUNDAY("일");
     }
 ```
+- DAY("월","화","수","목","금","토","일")에 해당하지 않는 요청 값 들어올 시 RecordException(ErrorCode.DAY_FAULT) [406 상태코드 반환]
+***
   ### 10. 가계부 기록 삭제 (DELETE) : /api/account_books/{bookId}/**records**/{recordId} 
 > - 인증된 사용자 인지 확인
-> - 가계부 기록 삭제한 후에 복원할 수 있는 Soft Delete 방식 채택
-> - 엔티티에 deleted_at 필드를 추가하고 @SQLDelete(sql = "UPDATE Record SET deleted_at = now() WHERE id = ?")를 사용하여 삭제 시 해당 시간으로 삭제시간 값 들어감
-> - 삭제시간이 존재할 시 -> 삭제된 기록 / 삭제시간이 Null일 시 존재하는 기록
-> > - 조회 시 @Where(clause = "deleted_at is null")가 조회 시 자동으로 조건으로 붙어서 존재하는 기록만 조회 가능
-> - 가계부 기록(Record)을 삭제 시 가계부(Account_Book)의 잔고(balance) 또한 복원 기능  
+> - 가계부 기록 삭제한 후에 복원할 수 있는 **Soft Delete 방식 채택**
+> - 엔티티에 deleted_at 필드를 추가하고 **@SQLDelete(sql = "UPDATE Record SET deleted_at = now() WHERE id = ?")를 사용하여 삭제 시 해당 시간으로 삭제시간 값 들어감**
+> - 삭제시간이 존재할 시 -> 삭제된 기록 / **삭제시간이 Null일 시 존재하는 가계부 기록(Record)**
+> > - **조회 시 @Where(clause = "deleted_at is null")**가 조회 시 자동으로 조건으로 붙어서 존재하는 기록만 조회 가능
+> - 가계부 기록(Record)을 삭제 시 가계부(Account_Book)의 잔고(balance) 또한 잔고 맞춤 기능  
 
   ### 11. 가계부 기록 복원 (POST) : /api/account_books/{bookId}/**records**/{recordId}/restore 
 > - 인증된 사용자 인지 확인
