@@ -31,8 +31,8 @@ public class SecurityConfig {
                 .cors().and()
                 .authorizeRequests()
                 .antMatchers("/api/users/join", "/api/users/login", "/swagger-ui").permitAll() // join, login은 언제나 가능
-                .antMatchers(HttpMethod.GET, "/api/**").authenticated()   // 모든 get 요청 허용
-                .antMatchers(HttpMethod.POST, "/api/**").authenticated()  // 순서대로 적용이 되기 때문에 join, login 다음에 써주기
+                .antMatchers(HttpMethod.GET, "/api/**").authenticated()
+                .antMatchers(HttpMethod.POST, "/api/**").authenticated()
                 .antMatchers(HttpMethod.PUT, "/api/**").authenticated()
                 .antMatchers(HttpMethod.DELETE, "/api/**").authenticated()
                 .and()
@@ -43,7 +43,6 @@ public class SecurityConfig {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .addFilterBefore(new JwtFilter(userService, secretKey), UsernamePasswordAuthenticationFilter.class)
-                //UserNamePasswordAuthenticationFilter 적용하기 전에 JWTTokenFilter를 적용 하라는 뜻.
                 .build();
     }
 
