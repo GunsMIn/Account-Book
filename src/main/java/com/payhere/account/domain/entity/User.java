@@ -2,6 +2,8 @@ package com.payhere.account.domain.entity;
 
 import com.payhere.account.domain.entity.type.UserRole;
 import lombok.*;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -15,10 +17,11 @@ import java.util.List;
 @Entity
 @Getter
 @Builder
-@ToString
-@Table(name="user")
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name="user")
+@Where(clause = "deleted_at is null")
+@SQLDelete(sql = "UPDATE user SET deleted_at = now() WHERE user_id = ?")
 @EntityListeners(AuditingEntityListener.class)
 public class User extends BaseEntity implements UserDetails  {
 
@@ -28,13 +31,13 @@ public class User extends BaseEntity implements UserDetails  {
     private Long id;
 
     @Column(nullable = false)
-    private String name;
+    private String name;//이름
 
     @Column(nullable = false)
-    private String email;
+    private String email;//이메일
 
     @Column(nullable = false)
-    private String password;
+    private String password;//비밀번호
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)

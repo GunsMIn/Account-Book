@@ -25,7 +25,7 @@ import static javax.persistence.FetchType.*;
 @NoArgsConstructor
 @Table(name="record")
 @Where(clause = "deleted_at is null")
-@SQLDelete(sql = "UPDATE Record SET deleted_at = now() WHERE id = ?")
+@SQLDelete(sql = "UPDATE record SET deleted_at = now() WHERE record_id = ?")
 public class Record extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,25 +33,23 @@ public class Record extends BaseEntity{
     private Long id;
 
     @Column(nullable = false)
-    private String memo;
+    private String memo; // 가계부 기록 메모
 
     @Column(nullable = false)
-    private Integer money;
+    private Integer money; // 돈(+,-)
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private ExpendType expendType;
+    private ExpendType expendType; // 지출 타입
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private Act act;
+    private Act act; // 지출 or 저축
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private Day day;
+    private Day day; // 요일
 
-    @Column(name = "deleted_at")
-    private LocalDateTime deletedAt;
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "user_id")
@@ -70,9 +68,9 @@ public class Record extends BaseEntity{
         this.act = Act.getEnum(recordDto.getAct());
         this.day = Day.getEnum(recordDto.getDay());
         /*SPENDING(지출)일 때와 SAVING("저축")일 때의 구분*/
-        if (recordDto.getExpendType().equals(Act.SPENDING.getDescription())) {
+        if (recordDto.getAct().equals(Act.SPENDING.getDescription())) {
             accountBook.updateSpendMoney(originMoney, recordDto.getMoney());
-        }else{
+        }else if(recordDto.getAct().equals(Act.SAVING.getDescription())){
             accountBook.updateSaveMoney(originMoney, recordDto.getMoney());
         }
         return this;

@@ -19,12 +19,15 @@ import java.time.format.DateTimeFormatter;
 public abstract class BaseEntity {
 
     @CreatedDate
-    @Column(updatable = false)
+    @Column(name ="registered_at" ,updatable = false)
     private Timestamp registeredAt;
 
     @LastModifiedDate
+    @Column(name ="update_at")
     private Timestamp updatedAt;
 
+    @Column(name = "deleted_at")
+    private Timestamp deletedAt;
 
 
 }

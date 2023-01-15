@@ -29,7 +29,7 @@ import static javax.persistence.FetchType.*;
 @NoArgsConstructor
 @Table(name="account_book")
 @Where(clause = "deleted_at is null")
-@SQLDelete(sql = "UPDATE account_book SET deleted_at = now() WHERE id = ?")
+@SQLDelete(sql = "UPDATE account_book SET deleted_at = now() WHERE account_book_id = ?")
 public class AccountBook extends BaseEntity {
 
     @Id
@@ -38,16 +38,13 @@ public class AccountBook extends BaseEntity {
     private Long id;
 
     @Column(nullable = false)
-    private String title;
+    private String title; // 가계부 제목
 
     @Column(nullable = false)
-    private String memo;
-    //잔고
-    @Column(nullable = false)
-    private Integer balance;
+    private String memo; // 가계부 메모
 
-    @Column(name = "deleted_at")
-    private Timestamp deletedAt;
+    @Column(nullable = false)
+    private Integer balance; // 가계부 잔고
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "user_id")
@@ -67,23 +64,28 @@ public class AccountBook extends BaseEntity {
         return this;
     }
 
-    /**잔고 지출 저축 비지니스 메서드**/
+    /**저축시 잔고 + 비지니스 메서드**/
     public void addMoney(Integer money) {
         this.balance += money;
     }
-
+    /** 지출시  잔고 - 비지니스 메서드**/
     public void minusMoney(Integer money) {
         this.balance -= money;
     }
 
     /**가계부 기록 수정 시 잔고 변경 비지니스 메서드**/
-    /**지출시 잔고수정**/
+    /**지출 수정시 잔고수정**/
     public void updateSpendMoney(Integer originMoney, Integer changedMoney) {
-        this.balance += (originMoney - changedMoney);
+        log.info("변경 시 지출 {},{}",changedMoney,originMoney);
+        int money = changedMoney - originMoney;
+        this.balance -= money;
     }
 
+    /**저축 수정시 잔고수정**/
     public void updateSaveMoney(Integer originMoney, Integer changedMoney) {
-        this.balance -= (originMoney - changedMoney);
+        int money = changedMoney - originMoney;
+        this.balance += money;
+
     }
 
     /**가계부 기록 삭제 시 가계부 잔고 복원 메서드**/
