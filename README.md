@@ -91,6 +91,11 @@
 | DELETE | /api/account_books/{bookId}/**records**/{recordId}            | 가계부 기록 삭제하기(with 가계부 잔고 복원 ) |                                           |✔ |
 | POST | /api/account_books/{bookId}/**records**/{recordId}/resave            | 가계부 삭제된 기록 복원하기 (with 가계부 잔고 복원 ) |                                           |✔ |
 
+## 설계
+**가계부 기능에 관련된 API의 요구사항을 보면서 우선 회원테이블 , 가계부 테이블 그리고 가계부에 대한 글 작성을 할 수 있는 가계부 기록테이블을 생각하게되었다. 회원(user)과 가계부(account_book)은 1 대 다 관계로 가계부(account_book)테이블이 회원의 PK(user_id)를 참조키로 갖게 설계하였고 또한 회원과  가계부 기록(record) 도 1 대 다 관계이므로 기록(record)테이블도 회원의 PK(user_id)를 참조키로 갖게 설계하였다. 가계부(account_book)와 가계부 기록(record)도 1 대 다 관계로 설계하여 기록(record)테이블에서 가계부의 PK(account_book_id)를 참조키로 갖게 설계하였다. 삭제에서는 논리 삭제를 구현하기위해 soft-delete 방법을 채택하였다. 따라서 각 테이블에 deleted_at이라는 컬럼을 추가하여 삭제 시에는 이 컬럼에 현재시간의 값이 들어갈 수 있게 설계하였다.
+또한 가계부 기록(record)에서 기록의 행위(Act) , 지출/저축의 종류(expend_type) , 요일(Day)을 Enum으로 만들어주어서  허용 가능한 값을 제한 할 수 있게 그리고 리팩토링 시 변경 범위가 최소화되게 제작해주었다. 또한 CustomError(자체 에러 클래스)를 만들어주어서 직관적으로 예외처리(exception handling)를 각 상황에 맞게 처리해주었다. 또한 ValidateService라는 별도의 비지니스 검증 로직들이 있는 서비스를 제작해주어서 코드의 중복을 최소화하려고 했다. 하지만 코드를 너무 많이 메서드 추출화 하면 오히려 가독성에 해칠 수 있기 때문에 직관적으로 보기 편할 수 있는 부분은 메서드 추출하지 않았다. 가계부 기록(record)과 가계부(account_book)의 dirty check 수정 메서드는 도메인 주도 설계 방식을 채택하였고 가계부 기록(record)의 money의 저축/지출 , 수정 , 삭제시 가계부(account_book)의 잔고(balance)의 변경 또한 도메인 주도 설계로 가져갔다.**
+
+
 ## USER(회원)
 ### 1. 회원가입 (POST) : /api/**users**/join 
 > - 이메일 중복 체크하여 회원가입
@@ -295,4 +300,5 @@ public enum Day {
 ## Jacoco TestReport✅
 
 <img width="845" alt="JOCOCOTEST" src="https://user-images.githubusercontent.com/104709432/212541689-78a3dbb8-d2cc-4c74-9527-1399b78a434b.PNG">
+
 
