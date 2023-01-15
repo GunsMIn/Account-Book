@@ -16,5 +16,9 @@ public interface UserRepository extends JpaRepository<User,Long> {
 
     Optional<User> findByName(String name);
 
+    /*삭제 된 user(회원) 복원*/
+    @Modifying
+    @Query("update User u set u.deletedAt = null where u.id = :userId ")
+    void reSave(@Param("userId") Long userId);
 
 }
