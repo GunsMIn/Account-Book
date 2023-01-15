@@ -12,7 +12,7 @@ public enum ErrorCode {
     EMAIL_NOT_FOUND(HttpStatus.NOT_FOUND,"해당 user를 찾을 수 없습니다."),
     ACCOUNTBOOK_NOT_FOUND(HttpStatus.NOT_FOUND,"해당 가계부를 찾을 수 없습니다"),
     RECORD_NOT_FOUND(HttpStatus.NOT_FOUND,"해당 가계부의 기록을 찾을 수 없습니다"),
-    RECORD_FAULT(HttpStatus.NOT_ACCEPTABLE,"해당 가계부의 기록을 찾을 수 없습니다"),
+    RECORD_FAULT(HttpStatus.NOT_ACCEPTABLE,"해당 가계부의 기록 타입은 지출/저축을 선택하셔야 합니다"),
     ACT_FAULT(HttpStatus.NOT_ACCEPTABLE,"저축 / 지출로 입력해주세요"),
     EXPEND_FAULT(HttpStatus.NOT_ACCEPTABLE,"해당하는 ExpendType이 없습니다 "),
     DAY_FAULT(HttpStatus.NOT_ACCEPTABLE,"해당하는 요일이 없습니다."),

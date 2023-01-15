@@ -54,7 +54,7 @@ public class RecordService {
         } else if (recordDto.getAct().equals(Act.SPENDING.getDescription())) {
             accountBook.minusMoney(recordDto.getMoney());
         }else{
-            throw new RecordException(ErrorCode.RECORD_FAULT, ErrorCode.RECORD_FAULT.getMessage());
+            throw new RecordException(ErrorCode.ACT_FAULT, ErrorCode.ACT_FAULT.getMessage());
         }
         Record savedRecord = recordRepository.save(record);
         return  RecordResponse.of(savedRecord);
