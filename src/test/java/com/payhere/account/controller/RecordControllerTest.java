@@ -2,10 +2,8 @@ package com.payhere.account.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.payhere.account.config.encrypt.EncrypterConfig;
-import com.payhere.account.domain.Response.record.RecordDeleteResponse;
-import com.payhere.account.domain.Response.record.RecordResponse;
-import com.payhere.account.domain.Response.record.RecordRestoreResponse;
-import com.payhere.account.domain.Response.record.RecordUpdateResponse;
+import com.payhere.account.domain.Response.accountBook.AccountSelectResponse;
+import com.payhere.account.domain.Response.record.*;
 import com.payhere.account.domain.dto.record.RecordDto;
 import com.payhere.account.domain.dto.record.RecordUpdateDto;
 import com.payhere.account.exception.ErrorCode;
@@ -548,24 +546,31 @@ class RecordControllerTest {
 
     }
 
-    @Test
-    @DisplayName("기록 최신순 정렬 페이징 조회")
-    @WithMockUser
-    public void 기록_페이징_테스트() throws Exception {
+    @Nested
+    @DisplayName("가계부 기록 조회/페이징 조회 테스트")
+    class Select {
 
-        PageRequest pageable = PageRequest.of(0, 5, Sort.Direction.DESC, "registeredAt");
 
-        mockMvc.perform(get("/api/account_books/1/records")
-                .param("page", "0")
-                .param("size", "5")
-                .param("sort", "registeredAt")
-                .param("direction", "Sort.Direction.DESC"))
-                .andExpect(status().isOk());
+        @Test
+        @DisplayName("기록 최신순 정렬 페이징 조회")
+        @WithMockUser
+        public void 기록_페이징_테스트() throws Exception {
 
-        assertThat(pageable.getPageNumber()).isEqualTo(0);
-        assertThat(pageable.getPageSize()).isEqualTo(5);
-        assertThat(pageable.getSort()).isEqualTo(Sort.by("registeredAt").descending());
-        verify(recordService, atLeastOnce()).getRecords(any(),any(),any());
+            PageRequest pageable = PageRequest.of(0, 5, Sort.Direction.DESC, "registeredAt");
+
+            mockMvc.perform(get("/api/account_books/1/records")
+                    .param("page", "0")
+                    .param("size", "5")
+                    .param("sort", "registeredAt")
+                    .param("direction", "Sort.Direction.DESC"))
+                    .andExpect(status().isOk());
+
+            assertThat(pageable.getPageNumber()).isEqualTo(0);
+            assertThat(pageable.getPageSize()).isEqualTo(5);
+            assertThat(pageable.getSort()).isEqualTo(Sort.by("registeredAt").descending());
+            verify(recordService, atLeastOnce()).getRecords(any(), any(), any());
+        }
+
+
     }
-
 }

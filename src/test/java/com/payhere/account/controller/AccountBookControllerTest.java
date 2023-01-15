@@ -51,7 +51,7 @@ class AccountBookControllerTest {
     ObjectMapper objectMapper;
 
     @Nested
-    @DisplayName("조회")
+    @DisplayName("가계부 조회 테스트")
     class select {
 
         @Test
@@ -113,7 +113,7 @@ class AccountBookControllerTest {
 
 
     @Nested
-    @DisplayName("작성")
+    @DisplayName("가계부 작성 테스트")
     class Insert {
         /**given**/
         AccountAddDto request = AccountAddDto.builder()
@@ -172,7 +172,7 @@ class AccountBookControllerTest {
     }
 
     @Nested
-    @DisplayName("수정")
+    @DisplayName("가계부 수정 테스트")
     class AccountBookUpdate {
 
         /**가계부 수정 시 Request**/
@@ -284,7 +284,7 @@ class AccountBookControllerTest {
     }
 
     @Nested
-    @DisplayName("삭제")
+    @DisplayName("가계부 삭제 테스트")
     class AccountBookDelete {
 
         /**
