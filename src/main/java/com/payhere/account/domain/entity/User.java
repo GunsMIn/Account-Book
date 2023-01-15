@@ -11,8 +11,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+
+import static javax.persistence.CascadeType.REMOVE;
 
 @Entity
 @Getter
@@ -42,6 +45,10 @@ public class User extends BaseEntity implements UserDetails  {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private UserRole role;
+
+    @OneToMany(mappedBy = "user",cascade = REMOVE, orphanRemoval = true)
+    private List<AccountBook> accountBooks = new ArrayList<>();
+
 
 
 

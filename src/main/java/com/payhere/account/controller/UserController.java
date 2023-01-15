@@ -2,6 +2,7 @@ package com.payhere.account.controller;
 
 import com.payhere.account.domain.Response.Response;
 import com.payhere.account.domain.Response.user.UserAdminResponse;
+import com.payhere.account.domain.Response.user.UserDeleteResponse;
 import com.payhere.account.domain.Response.user.UserJoinResponse;
 import com.payhere.account.domain.Response.user.UserLoginResponse;
 import com.payhere.account.domain.dto.user.UserJoinDto;
@@ -49,5 +50,12 @@ public class UserController {
     public Response<UserAdminResponse> updateUserRole(@PathVariable Long id, @RequestBody UserRoleDto userRoleDto, @ApiIgnore Authentication authentication) {
         UserAdminResponse changeRoleResponse = userService.changeRole(authentication.getName(), id, userRoleDto);
         return Response.success(changeRoleResponse);
+    }
+
+    @ApiOperation(value = "회원 삭제", notes = "soft delete 회원삭제 API ")
+    @DeleteMapping("/{id}")
+    public Response deleteUser(@PathVariable Long id,@ApiIgnore Authentication authentication) {
+        UserDeleteResponse response = userService.removeUser(id, authentication.getName());
+        return Response.success(response);
     }
 }

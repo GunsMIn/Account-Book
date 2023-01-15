@@ -3,6 +3,7 @@ package com.payhere.account.service;
 import com.payhere.account.config.jwt.JwtUtil;
 import com.payhere.account.config.redis.RedisDao;
 import com.payhere.account.domain.Response.user.UserAdminResponse;
+import com.payhere.account.domain.Response.user.UserDeleteResponse;
 import com.payhere.account.domain.Response.user.UserJoinResponse;
 import com.payhere.account.domain.Response.user.UserLoginResponse;
 import com.payhere.account.domain.dto.user.UserJoinDto;
@@ -80,10 +81,17 @@ public class UserService implements UserDetailsService {
         return UserLoginResponse.of(token,refreshToken);
     }
 
-    /** 회원의 role이 ADMIN 회원만 사용자의 권한을 바꿀 수 있는 서비스 로직**/
+    /**
+     * 회원의 role이 ADMIN(관리자) 회원만 사용자의 권한을 바꿀 수 있는 서비스 로직
+     *
+     * @param email 로그인 이메일
+     * @param id 권한 수정 대상 회원의 id
+     * @param userRoleDto 권한 변경 값(USER.ADMIN)
+     *
+     * @return UserAdminResponse 반환
+     */
     @Transactional
     public UserAdminResponse changeRole(String email, Long id, UserRoleDto userRoleDto) {
-   
         //회원 검증 + UserRole 검증 메서드
         User user = checkUserRole(email, id, userRoleDto);
         UserAdminResponse userAdminResponse = UserAdminResponse.of(user);
@@ -114,6 +122,25 @@ public class UserService implements UserDetailsService {
         return changedUser;
     }
 
+
+    /**
+     * 회원 삭제 메서드
+     *
+     * @param id 삭제 될 회원의 id
+     * @param email 로그인 email
+     * @return UserDeleteResponse 반환
+     */
+    public UserDeleteResponse removeUser(Long id, String email) {
+        User user = validateService.getUser(email);
+        User findUser = userRepository.findById(id).orElseThrow(() -> new UserException(ErrorCode.USER_NOT_FOUND));
+        /*삭제 권한 없음🔽*/
+        if (user.getId() != findUser.getId()) {
+            throw new UserException(ErrorCode.INVALID_PERMISSION);
+        }
+        /*삭제 진행*/
+        userRepository.deleteById(id);
+        return UserDeleteResponse.of(id);
+    }
 
 
     /**UserDetailsService 메서드**/
