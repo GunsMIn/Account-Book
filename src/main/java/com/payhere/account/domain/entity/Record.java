@@ -23,26 +23,33 @@ import static javax.persistence.FetchType.*;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(name="record")
 @Where(clause = "deleted_at is null")
 @SQLDelete(sql = "UPDATE Record SET deleted_at = now() WHERE id = ?")
 public class Record extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "record_id")
     private Long id;
 
+    @Column(nullable = false)
     private String memo;
 
+    @Column(nullable = false)
     private Integer money;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private ExpendType expendType;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private Act act;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private Day day;
-    //추후 돈 타입 만들기!
+
     @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
 

@@ -7,10 +7,8 @@ import com.payhere.account.domain.entity.AccountBook;
 import com.payhere.account.domain.entity.Record;
 import com.payhere.account.domain.entity.User;
 import com.payhere.account.domain.entity.type.Act;
-import com.payhere.account.exception.AccountException;
 import com.payhere.account.exception.ErrorCode;
-import com.payhere.account.exception.RecordException;
-import com.payhere.account.exception.UserException;
+import com.payhere.account.exception.customException.RecordException;
 import com.payhere.account.repository.AccountBookRepository;
 import com.payhere.account.repository.RecordRepository;
 import com.payhere.account.repository.UserRepository;
@@ -34,6 +32,7 @@ public class RecordService {
 
 
     /**
+     * 가계부 기록 하기
      * @param bookId 가계부 id로 해당 가계부 조회 param
      * @param recordDto 가계부 기록 add DTO
      * @param email 해당 user 찾는 email param
@@ -64,8 +63,9 @@ public class RecordService {
 
 
     /**
+     * 가계부 기록 수정
      * @param bookId 가계부 id로 해당 가계부 조회 param
-     * @param recordDto 가계부 기록 add DTO
+     * @param updateDto 가계부 수정 DTO
      * @param email 해당 user 찾는 email param
      *
      *
@@ -73,7 +73,6 @@ public class RecordService {
      *
      * @return RecordResponse 반환
      */
-    /**가계부 기록 수정**/
     public RecordUpdateResponse updateRecord(Long bookId, Long recordId, RecordUpdateDto updateDto, String email) {
         //해당 user 검증 로직 and 해당 AccountBook 검증 로직
         User user = validateService.getUser(email);
@@ -87,6 +86,7 @@ public class RecordService {
     }
 
     /**
+     * 가계부 기록 삭제
      * @param bookId 가계부 id로 해당 가계부 조회 param
      * @param recordId 해당 가계부 기록(record)를 찾기위한 param
      * @param email 사용자의 권한을 체크하기위한 param
@@ -96,17 +96,38 @@ public class RecordService {
      *
      * @return RecordResponse 반환
      */
-    /**가계부 기록 삭제 및 복원**/
     public RecordDeleteResponse deleteRecord(Long bookId, Long recordId, String email) {
         User user = validateService.getUser(email);
         AccountBook accountBook = validateService.getAccountBook(bookId);
         validateService.checkAuthority(user, accountBook);
         Record record = validateService.getRecord(recordId);
         /*Account_Book의 잔고(balacne) 복원 메서드🔽*/
-        accountBook.restore(record.getMoney(), record.getAct());
+        accountBook.restoreBalance(record.getMoney(), record.getAct());
         /*해당 record 삭제🔽*/
         recordRepository.deleteById(record.getId());
         return RecordDeleteResponse.of(record.getId());
+    }
+
+    /**
+     * 가계부 기록 복원
+     * @param bookId 가계부 id로 해당 가계부 조회 param
+     * @param recordId 해당 가계부 기록(record)를 찾기위한 param
+     * @param email 사용자의 권한을 체크하기위한 param
+     *
+     * soft-Delete에 의해 지원진 record 복원
+     * 기록 복원 시 가계부 잔고(balance) 복원
+     *
+     * @return RecordRestoreResponse 반환
+     */
+    public RecordRestoreResponse restoreRecord(Long bookId, Long recordId, String email) {
+        User user = validateService.getUser(email);
+        AccountBook accountBook = validateService.getAccountBook(bookId);
+        validateService.checkAuthority(user, accountBook);
+        recordRepository.reSave(recordId);
+        Record record = validateService.getRecord(recordId);
+
+        accountBook.restoreBalanceResave(record.getMoney(), record.getAct());
+        return RecordRestoreResponse.of(recordId);
     }
 
     /**
@@ -119,7 +140,6 @@ public class RecordService {
      *
      * @return RecordResponse 반환
      */
-    /**가계부 기록 삭제 및 복원**/
     @Transactional(readOnly = true)
     public Page<RecordListResponse> getRecords(Long bookId, Pageable pageable,String email) {
         User user = validateService.getUser(email);
@@ -129,6 +149,15 @@ public class RecordService {
         return RecordListResponse.of(records);
     }
 
+    /**
+     * @param bookId 가계부 id로 해당 가계부 조회 param
+     * @param recordId 해당 가계부 기록(record)를 찾기위한 param
+     * @param email 사용자의 권한을 체크하기위한 param
+     *
+     * 가계부 기록 단건 조회
+     *
+     * @return RecordSelectResponse 반환
+     */
     @Transactional(readOnly = true)
     public RecordSelectResponse getRecord(Long bookId, Long recordId, String email) {
         User user = validateService.getUser(email);

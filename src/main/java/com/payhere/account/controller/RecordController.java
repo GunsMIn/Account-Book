@@ -61,4 +61,11 @@ public class RecordController {
         return Response.success(response);
     }
 
+    @ApiOperation("가계부 기록 복원 API")
+    @PostMapping("/{bookId}/records/{recordId}/restore")
+    public Response restoreRecord(@PathVariable Long bookId,@PathVariable Long recordId ,@ApiIgnore Authentication authentication) {
+        RecordRestoreResponse response = recordService.restoreRecord(bookId, recordId, authentication.getName());
+        return Response.success(response);
+    }
+
 }
