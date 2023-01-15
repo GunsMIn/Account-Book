@@ -65,7 +65,7 @@
 
 
 
-### 테스트 전용 로그인 회원
+### 테스트 전용 관리자(ADMIN) 회원
 **User**
 > - email : test@gmail.com
 >
@@ -78,6 +78,7 @@
 | ------ | ---------------------------------- |---------------------------------------------------| ------------------------------------- |----------- |
 | POST   | /api/**users**/join                 | 회원가입                      | {"username": "string", "email":"string", "password":"string"} |  | 
 | POST   | /api/**users**/login                | 로그인                       | {"email": "string", "password":"string"} | | 
+| POST   | /api/**users**/{id}/role_change               | 회원 등급 변경(ADMIN 등급만 가능)                     | {"role": "string"} | | 
 | GET    | /api/**account_books**                     |해당 회원의 가계부 전체 리스트(최신 가계부 5개 페이징 처리)  |                                           | ✔| 
 | GET    | /api/**account_books**/{id}                     | 가계부 단건 조회   |                                           |✔ | 
 | POST    | /api/**account_books**/{id}             | 가계부 생성             | {"title": "string", "memo":"string", "balance":"string"}                                           |✔ | 
@@ -101,37 +102,42 @@
 > - 비밀번호 일치/불일치 확인 작업
 > - 위 2개의 검증이 끝난 후 jwt와 refresh token을 반환
 > - 엔티티와 DTO의 분리로 API 스펙의 유지 
+
+ ### 3. 회원 등급 변경  (POST) : /api/**users**/{id}/role_change 
+> - 인증된 사용자 인지 확인
+> - ADMIN 회원만이 일반 회원을 ADMIN으로 승격시키는 API(일반회원 등급업 기능 불가)
+> - 해당 회원이 ADMIN인지 검사(userRole check)
  ## Account_Book(가계부)
-  ### 3. 가계부 생성 (POST) : /api/**account_books** 
+  ### 4. 가계부 생성 (POST) : /api/**account_books** 
 > - 인증된 사용자 인지 확인
 > - 로그인하지 않은 고객은 가계부 내역에 대한 접근 제한 처리
 > - 가계부 잔고(balance) , 제목(title) , 메모(memo)를 작성하여 가계부 생성
 > - 엔티티와 DTO의 분리로 API 스펙의 유지
-   ### 4. 가계부 수정 (PATCH) : /api/**account_books**/{id} 
+   ### 5. 가계부 수정 (PATCH) : /api/**account_books**/{id} 
 > - 인증된 사용자 인지 확인(가계부 생성한 사람인지 타인인지 검증)
 > - 로그인하지 않은 고객은 가계부 수정에 대한 접근 제한 처리
 > - id로 해당 가계부 조회 후 Dirty check를 이용하여 가계부 잔고(balance) , 제목(title) , 메모(memo) 수정
 > - 엔티티와 DTO의 분리로 API 스펙의 유지
 
- ### 5. 가계부 삭제 (DELETE) : /api/**account_books**/{id} 
+ ### 6. 가계부 삭제 (DELETE) : /api/**account_books**/{id} 
 > - 인증된 사용자 인지 확인(가계부 생성한 사람인지 타인인지 검증)
 > - 로그인하지 않은 고객은 가계부 삭제에 대한 접근 제한 처리
 > - id로 해당 가계부 조회 후 해당 가계부 삭제 처리
 
-   ### 6. 가계부 단건 조회 (GET) : /api/**account_books**/{id} 
+   ### 7. 가계부 단건 조회 (GET) : /api/**account_books**/{id} 
 > - 인증된 사용자 인지 확인
 > - 로그인하지 않은 고객은 가계부 조회에 대한 접근 제한 처리
 > - id로 해당 가계부 조회 
 > - 엔티티와 DTO의 분리로 API 스펙의 유지
 
-   ### 7. 가계부 전체 조회 (GET) : /api/**account_books**
+   ### 8. 가계부 전체 조회 (GET) : /api/**account_books**
 > - 인증된 사용자 인지 확인
 > - 최신순으로 작성한 가계부 페이징 처리 조회(COUNT : 5)
 > - 로그인한 사용자 조회 후 가계부 리스트 조회
 > - 엔티티와 DTO의 분리로 API 스펙의 유지
 
 ## Record(가계부 기록)
-  ### 8. 가계부 기록 쓰기 (POST) : /api/account_books/{bookId}/**records** 
+  ### 9. 가계부 기록 쓰기 (POST) : /api/account_books/{bookId}/**records** 
 > - 인증된 사용자 인지 확인
 > - 가계부 기록을 위한 **ACT(행위) , ExpendType(지출 종류) , Day(요일) 을 Enum으로 제작
  가계부 기록 Request 제한**
@@ -178,7 +184,7 @@ public enum Day {
 - DAY("월","화","수","목","금","토","일")에 해당하지 않는 요청 값 들어올 시 RecordException(ErrorCode.DAY_FAULT) [406 상태코드 반환]
 ***
 
-  ### 9. 가계부 기록 수정 (PATCH) : /api/account_books/{bookId}/**records**/{recordId}
+  ### 10. 가계부 기록 수정 (PATCH) : /api/account_books/{bookId}/**records**/{recordId}
 > - 인증된 사용자 인지 확인
 > - 가계부 기록을 위한 ACT(행위) , ExpendType(지출 종류) , Day(요일) 을 **Enum**으로 제작
 > - 영속성 컨텍스트의 스냅샷을 이용한 Dirty Check(변경감지)를 이용한 수정
@@ -227,7 +233,7 @@ public enum Day {
 ```
 - DAY("월","화","수","목","금","토","일")에 해당하지 않는 요청 값 들어올 시 RecordException(ErrorCode.DAY_FAULT) [406 상태코드 반환]
 ***
-  ### 10. 가계부 기록 삭제 (DELETE) : /api/account_books/{bookId}/**records**/{recordId} 
+  ### 11. 가계부 기록 삭제 (DELETE) : /api/account_books/{bookId}/**records**/{recordId} 
 > - 인증된 사용자 인지 확인
 > - 가계부 기록 삭제한 후에 복원할 수 있는 **Soft Delete 방식 채택**
 > - 엔티티에 deleted_at 필드를 추가하고 **@SQLDelete(sql = "UPDATE Record SET deleted_at = now() WHERE id = ?")를 사용하여 삭제 시 해당 시간으로 삭제시간 값 들어감**
@@ -235,19 +241,56 @@ public enum Day {
 > > - **조회 시 @Where(clause = "deleted_at is null")**가 조회 시 자동으로 조건으로 붙어서 존재하는 기록만 조회 가능
 > - 가계부 기록(Record)을 삭제 시 가계부(Account_Book)의 잔고(balance) 또한 잔고 맞춤 기능  
 
-  ### 11. 가계부 기록 복원 (POST) : /api/account_books/{bookId}/**records**/{recordId}/restore 
+  ### 12. 가계부 기록 복원 (POST) : /api/account_books/{bookId}/**records**/{recordId}/restore 
 > - 인증된 사용자 인지 확인
 > - 가계부 기록 삭제한 후에 복원할 수 있는 Soft Delete 방식 채택
 > - @PathVaraible 로 들어온 id로 해당 삭제된 가계부 기록(Record)를 조회 후 삭제시간을 다시 Null로 만들어줌 => 가계부 기록 복원
 > - 가계부 기록(Record)을 복원 시 가계부(Account_Book)의 잔고(balance) 또한 복원 기능
 
-  ### 12. 가계부 기록 단건 조회 (GET) : /api/account_books/{bookId}/**records**/{recordId}
+  ### 13. 가계부 기록 단건 조회 (GET) : /api/account_books/{bookId}/**records**/{recordId}
 > - 인증된 사용자 인지 확인
 > - @PathVaraible 로 들어온 id로 해당 가계부 기록 단건 조회
 
-  ### 13. 가계부 기록 페이징 조회 (GET) : /api/account_books/{bookId}/**records**
+  ### 14. 가계부 기록 페이징 조회 (GET) : /api/account_books/{bookId}/**records**
 > - 인증된 사용자 인지 확인
 > - 인증된 사용자의 가계부 기록 20개 최신순으로 페이징 조회
+  
+<br>
+
+## Error Info
+
+| Status Code | Error Message        | When                                               |
+|-------------|----------------------|----------------------------------------------------|
+| 409         | DUPLICATED_EMAIL | 회원 가입 시 중복일 때 발생                                   |
+| 404         | EMAIL_NOT_FOUND   | DB에 저장된 Email이 없는 경우 발생                              |
+| 404         | ACCOUNTBOOK_NOT_FOUND       | 상세 조회, 삭제, 수정 요청 시, 요청한 account_book_id 해당하는 가계부가 없는 경우 발생 |
+| 404         | RECORD_NOT_FOUND    | 요청한 record_id에 해당하는 가계부 기록(Record)가 없는 경우 발생   |
+| 406         | ACT_FAULT      | 가계부 기록 등록시 Act를 지출/저축 외의 요청 시 발생          |
+| 406         | EXPEND_FAULT      | 가계부 기록 등록시 ExpendType(지출 종류)가 지정 된 이외의 요청 시 발생          |
+| 406         | DAY_FAULT      | 가계부 기록 등록시 Dau(요일)이 지정 된 이외의 요청 시 발생          |
+| 401         | INVALID_PASSWORD     | 로그인 시 패스워드 잘못 입력한 경우 발생                            |
+| 401         | INVALID_TOKEN        | jwt 토큰이 아니거나 유효하지 않은 토큰으로 요청할 시 발생                 |
+| 401         | INVALID_PERMISSION       | 요청자와 소유권자가 다른 경우 발생               |
+| 406         | USER_ROLE_NOT_FOUND    | ADMIN의 권한 변경시 요청값이 USER,ADMIN 외의 값이 들어올 때 발생        |
+| 500         | DATABASE_ERROR       | DB 연결이 끊어질 경우 발생                                   |
+
+<br>
+
+에러 발생 시, 예시
+
+```json
+{
+  "resultCode": "ERROR",
+  "result": {
+    "errorCode": "RECORD_NOT_FOUND",
+    "message": "해당 가계부의 기록을 찾을 수 없습니다"
+  }
+}
+```
+
+<br>
+
+---
 
 ## Jacoco TestReport✅
 
