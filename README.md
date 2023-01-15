@@ -29,7 +29,7 @@
 **가계부(AccountBook) 작성, 수정, 삭제, 리스트** | :heavy_check_mark: |  
 **가계부 기록(Record) 작성, 수정, 삭제, 복원,리스트** | :heavy_check_mark: |  
 **가계부 기록 수정, 삭제, 복원 시 가계부 잔고 정상적인 계산 로직** | :heavy_check_mark: | 
-**AWS EC2에 Docker 배포** | :heavy_check_mark: |  
+**AWS EC2 서버 Docker 배포** | :heavy_check_mark: |  
 **Gitlab CI & Crontab CD** | :heavy_check_mark: 
 
 # ERD 다이어그램
