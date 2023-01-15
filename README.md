@@ -1,6 +1,21 @@
-# Account-Book(가계부  RestApi)
+# 가계부  RestAPI
+![payhere_logo_basic](https://user-images.githubusercontent.com/104709432/212535955-c4cc431f-2d98-4379-8209-6acec4ed1bf8.jpg)
 
-***
+<br>
+
+## 개발환경
+
+<br>
+
+- **Java 11**
+- **Build** : Gradle 7.6
+- **Framework** : Springboot 2.7.7
+- **Database** : MySQL
+- **CI & CD** : GitLab
+- **Server** : AWS EC2
+- **Deploy** : Docker
+- **IDE** : IntelliJ
+<br>
 
 ## 구현 완료
 **Function** | **완료** | 
