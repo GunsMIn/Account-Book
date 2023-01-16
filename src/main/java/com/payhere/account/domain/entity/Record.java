@@ -6,18 +6,11 @@ import com.payhere.account.domain.entity.type.Act;
 import com.payhere.account.domain.entity.type.Day;
 import com.payhere.account.domain.entity.type.ExpendType;
 import lombok.*;
-import lombok.extern.slf4j.Slf4j;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
-
-import javax.naming.ldap.ExtendedRequest;
 import javax.persistence.*;
-import java.time.LocalDateTime;
-
-import static javax.persistence.CascadeType.*;
 import static javax.persistence.FetchType.*;
-@ToString
-@Slf4j
+
 @Entity
 @Builder
 @Getter
@@ -60,7 +53,7 @@ public class Record extends BaseEntity{
     private AccountBook accountBook;
 
 
-    /**dirty check 수정 메서드(변경_감지)**/
+    /**dirty check 수정 메서드(변경_감지) 저축/지출 구분하여 가계부의 잔고(balance) 또한 수정**/
     public Record update(Integer originMoney, RecordUpdateDto recordDto , AccountBook accountBook) {
         this.money = recordDto.getMoney();
         this.memo = recordDto.getMemo();

@@ -1,27 +1,19 @@
 package com.payhere.account.domain.entity;
-
-import com.payhere.account.domain.dto.record.RecordUpdateDto;
 import com.payhere.account.domain.entity.type.Act;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
-
 import javax.persistence.*;
-
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import static javax.persistence.CascadeType.ALL;
+
 import static javax.persistence.CascadeType.REMOVE;
 import static javax.persistence.FetchType.*;
 
-@Slf4j
 @Entity
 @Builder
 @Getter
@@ -76,7 +68,6 @@ public class AccountBook extends BaseEntity {
     /**가계부 기록 수정 시 잔고 변경 비지니스 메서드**/
     /**지출 수정시 잔고수정**/
     public void updateSpendMoney(Integer originMoney, Integer changedMoney) {
-        log.info("변경 시 지출 {},{}",changedMoney,originMoney);
         int money = changedMoney - originMoney;
         this.balance -= money;
     }
