@@ -1,7 +1,4 @@
 # 가계부  RestAPI
-![payhere_logo_basic](https://user-images.githubusercontent.com/104709432/212535955-c4cc431f-2d98-4379-8209-6acec4ed1bf8.jpg)
-
-<br>
 
 ## RestApi Swagger 
 ### [http://ec2-3-39-231-24.ap-northeast-2.compute.amazonaws.com:8080/swagger-ui](http://ec2-3-39-231-24.ap-northeast-2.compute.amazonaws.com:8080/swagger-ui/index.html#/)</br>
