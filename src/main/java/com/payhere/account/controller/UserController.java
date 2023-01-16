@@ -20,10 +20,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
+@Api(tags = "User(회원 API)")
 @RestController
 @RequiredArgsConstructor
 @Slf4j
-@Api(tags = "User(회원 API)")
 @RequestMapping("/api/users")
 public class UserController {
 

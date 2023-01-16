@@ -32,7 +32,6 @@ public class AccountBookController {
     @ApiOperation(value ="가계부 생성 API", notes = "balance : 잔고 , title : 가계부 제목 , memo : 가계부 머릿말 메모 등록 후 가계부 생성 API")
     @PostMapping
     public Response makeAccountBook(@RequestBody AccountAddDto addRequest, @ApiIgnore Authentication authentication) {
-        log.info("가계부 등록 인증인 email : {}" , authentication.getName());
         AccountAddResponse response = accountBookService.makeBook(addRequest, authentication.getName());
         return Response.success(response);
     }
@@ -40,7 +39,6 @@ public class AccountBookController {
     @ApiOperation(value ="가계부 수정 API", notes = "해당 가계부 수정 API(잔고,가계부 제목,가계부 머릿말 메모 수정)")
     @PatchMapping("/{id}")
     public Response modifyAccountBook(@PathVariable Long id, @RequestBody AccountModifyDto modifyRequest, @ApiIgnore Authentication authentication) {
-        log.info("가계부 수정 인증인 email : {}" , authentication.getName());
         AccountModifyResponse response = accountBookService.updateBook(id, modifyRequest, authentication.getName());
         return Response.success(response);
     }
@@ -48,7 +46,6 @@ public class AccountBookController {
     @ApiOperation(value ="가계부 삭제 API", notes = "해당 가계부 삭제 API")
     @DeleteMapping("/{id}")
     public Response removeAccountBook(@PathVariable Long id, @ApiIgnore Authentication authentication) {
-        log.info("가계부 삭제 인증인 email : {}" , authentication.getName());
         AccountBookDeleteResponse response = accountBookService.deleteBook(id, authentication.getName());
         return Response.success(response);
     }
@@ -56,7 +53,6 @@ public class AccountBookController {
     @ApiOperation(value ="가계부 단건 조회 API", notes = "@PathVariable id값으로 해당 가계부 조회")
     @GetMapping("/{id}")
     public Response<AccountSelectResponse> getOneAccountBook(@PathVariable Long id, @ApiIgnore Authentication authentication) {
-        log.info("가계부 단건 조회 인증인 email : {}" , authentication.getName());
         AccountSelectResponse response = accountBookService.getBook(id, authentication.getName());
         return Response.success(response);
     }
