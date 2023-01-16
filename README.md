@@ -13,7 +13,6 @@
 - **Java 11**
 - **Build** : Gradle 7.6
 - **Framework** : Springboot 2.7.7
-- **Database** : MySQL
 - **CI & CD** : GitLab
 - **Server** : AWS EC2
 - **Deploy** : Docker
@@ -251,7 +250,7 @@ public enum Day {
 > - 가계부 기록 삭제한 후에 복원할 수 있는 **Soft Delete 방식 채택**
 > - 엔티티에 deleted_at 필드를 추가하고 **@SQLDelete(sql = "UPDATE Record SET deleted_at = now() WHERE id = ?")를 사용하여 삭제 시 해당 시간으로 삭제시간 값 들어감**
 > - 삭제시간이 존재할 시 -> 삭제된 기록 / **삭제시간이 Null일 시 존재하는 가계부 기록(Record)**
-> > - **조회 시 @Where(clause = "deleted_at is null")**가 조회 시 자동으로 조건으로 붙어서 존재하는 기록만 조회 가능
+> > - 조회 시 @Where(clause = "deleted_at is null")가 조회 시 자동으로 조건으로 붙어서 존재하는 기록만 조회 가능
 > - 가계부 기록(Record)을 삭제 시 가계부(Account_Book)의 잔고(balance) 또한 잔고 맞춤 기능  
 
   ### 13. 가계부 기록 복원 (POST) : /api/account_books/{bookId}/**records**/{recordId}/restore 
