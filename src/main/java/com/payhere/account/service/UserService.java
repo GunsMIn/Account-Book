@@ -90,7 +90,6 @@ public class UserService implements UserDetailsService {
      *
      * @return UserAdminResponse 반환
      */
-    @Transactional
     public UserAdminResponse changeRole(String email, Long id, UserRoleDto userRoleDto) {
         //회원 검증 + UserRole 검증 메서드
         User user = checkUserRole(email, id, userRoleDto);
@@ -111,9 +110,9 @@ public class UserService implements UserDetailsService {
         User changedUser = userRepository.findById(id)
                 .orElseThrow(() -> new UserException(ErrorCode.USER_NOT_FOUND, String.format("%d번 회원은 존재하지 않습니다", id)));
         // requestBody에 들어올 값과 UserRole 비교
-        if(userRoleDto.getRole().equals(UserRole.USER.name())) {
+        if(userRoleDto.getRole().toUpperCase().equals(UserRole.USER.name())) {
             changedUser.changeRole(UserRole.USER);
-        }else if(userRoleDto.getRole().equals(UserRole.ADMIN.name())){
+        }else if(userRoleDto.getRole().toUpperCase().equals(UserRole.ADMIN.name())){
             changedUser.changeRole(UserRole.ADMIN);
         }else {
             throw new UserException(ErrorCode.USER_ROLE_NOT_FOUND, ErrorCode.USER_ROLE_NOT_FOUND.getMessage());
