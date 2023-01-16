@@ -24,6 +24,7 @@ public enum ExpendType {
 
     private final String name;
 
+    /**String -> enum 메서드**/
     public static ExpendType getEnum(String value) {
         if (value.equals(FOOD_EXPENSE.getName())) {
             return FOOD_EXPENSE;

@@ -19,7 +19,7 @@ public enum Day {
 
     private final String name;
 
-
+    /**String -> enum 메서드**/
     public static Day getEnum(String value) {
         if (value.equals(MONDAY.getName())) {
             return MONDAY;

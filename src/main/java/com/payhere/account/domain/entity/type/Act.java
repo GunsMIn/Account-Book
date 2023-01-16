@@ -11,6 +11,7 @@ public enum Act {
     SPENDING("지출"), SAVING("저축");
     private final String description;
 
+    /**String -> enum 메서드**/
     public static Act getEnum(String value) {
         if (value.equals(SPENDING.getDescription())) {
             return SPENDING;
