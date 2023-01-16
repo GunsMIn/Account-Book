@@ -18,7 +18,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
 
     private final UserService userService;
-    @Value("${jwt.token.secret}") // yml에 저장된 값을 가져온다.
+    @Value("${jwt.token.secret}")
     private String secretKey;
 
     @Bean

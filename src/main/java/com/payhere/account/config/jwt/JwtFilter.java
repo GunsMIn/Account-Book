@@ -33,11 +33,9 @@ public class JwtFilter extends OncePerRequestFilter {
     private final String secretKey;
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        // http header에 있는 AUTHORIZATION 정보를 받아옵니다.
+
         final String token = getToken(request);
         log.info("token : {}", token);
-
-        // AUTHORIZATION에 있는 Token을 꺼냅니다.
         try {
 
             String userName = JwtUtil.getUserName(token, secretKey);
@@ -64,7 +62,7 @@ public class JwtFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
         }
     }
-
+    /*토큰 추출 메서드*/
     private String getToken(HttpServletRequest request) {
         String token = request.getHeader(HttpHeaders.AUTHORIZATION);
         if (StringUtils.hasText(token) && token.startsWith(BEARER)) {
