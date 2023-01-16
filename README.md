@@ -26,7 +26,7 @@
 **Swagger** | :heavy_check_mark: |  
 **Spring Security 인증 / 인가 필터 구현** | :heavy_check_mark: |  
 **회원가입 / 로그인 구현 (JWT 토큰 발급, reFresh Token )** | :heavy_check_mark: |  
-**회원 등급 변경(USER<=>ADMIN) / 회원 삭제()** | :heavy_check_mark: |  
+**회원 등급 변경(USER<=>ADMIN) / 회원 삭제(soft delete)** | :heavy_check_mark: |  
 **가계부(AccountBook) 작성, 수정, 삭제, 리스트** | :heavy_check_mark: |  
 **가계부 기록(Record) 작성, 수정, 삭제, 복원,리스트** | :heavy_check_mark: |  
 **가계부 기록 수정, 삭제, 복원 시 가계부 잔고 정상적인 계산 로직** | :heavy_check_mark: | 
