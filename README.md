@@ -59,16 +59,6 @@
   - updated_at : 수정 시간
   - deleted_at : 삭제 시간
 
-
-
-
-### 테스트 전용 관리자(ADMIN) 회원
-**User**
-> - email : test@gmail.com
->
-> - PW : kk1234
-<hr>
-
 ## 🔽 RestAPI EndPoint
 
 | METHOD | URI                                | 기능               | RequestBody                                      |인증필요             |
