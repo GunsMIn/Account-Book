@@ -13,7 +13,7 @@ public class UserFixture {
                 .id(1l)
                 .name(email)
                 .password(password)
-                .role(UserRole.ROLE_USER)
+                .role(UserRole.USER)
                 .build();
 
     }
