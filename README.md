@@ -32,7 +32,7 @@
 # ERD 다이어그램
 <br>
 
-![다이어그램 drawio](https://user-images.githubusercontent.com/104709432/212534709-d11dfa46-c5ec-4a56-9288-ee4cd18c4fbc.png)
+![가계부 (2)](https://user-images.githubusercontent.com/104709432/212717278-c8bf145c-95c7-47a4-b4a2-d568a36bc3e6.png)
 
 </br>
 
@@ -58,16 +58,6 @@
   - registerd_at : 생성 시간
   - updated_at : 수정 시간
   - deleted_at : 삭제 시간
-
-
-
-
-### 테스트 전용 관리자(ADMIN) 회원
-**User**
-> - email : test@gmail.com
->
-> - PW : kk1234
-<hr>
 
 ## 🔽 RestAPI EndPoint
 
