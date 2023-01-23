@@ -14,6 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.Authentication;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
@@ -27,14 +28,14 @@ public class RecordController {
 
     @ApiOperation(value ="가계부 기록 쓰기 지출/저축 API", notes = "money(돈),memo(기록 메모),act(기록 행위),expendType(지출 종류),day(요일) 등록 후 가계부 기록 생성")
     @PostMapping("/{bookId}/records")
-    public Response saveOrSpend(@PathVariable Long bookId, @RequestBody RecordDto recordDto, @ApiIgnore Authentication authentication) {
+    public Response saveOrSpend(@PathVariable Long bookId, @Validated @RequestBody RecordDto recordDto, @ApiIgnore Authentication authentication) {
         RecordResponse response = recordService.spendOrSave(bookId, recordDto, authentication.getName());
         return Response.success(response);
     }
 
     @ApiOperation(value ="가계부 기록 수정 API", notes = "가계부 기록 조회 후 money(돈),memo(기록 메모),act(기록 행위),expendType(지출 종류),day(요일) 수정 API" )
     @PatchMapping("/{bookId}/records/{recordId}")
-    public Response modifyRecord(@PathVariable Long bookId, @PathVariable Long recordId , @RequestBody RecordUpdateDto recordDto, @ApiIgnore Authentication authentication) {
+    public Response modifyRecord(@PathVariable Long bookId, @PathVariable Long recordId ,@Validated @RequestBody RecordUpdateDto recordDto, @ApiIgnore Authentication authentication) {
         RecordUpdateResponse response = recordService.updateRecord(bookId, recordId, recordDto, authentication.getName());
         return Response.success(response);
     }
