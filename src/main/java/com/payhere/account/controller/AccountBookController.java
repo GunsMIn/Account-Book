@@ -17,6 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.Authentication;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
@@ -31,14 +32,14 @@ public class AccountBookController {
 
     @ApiOperation(value ="가계부 생성 API", notes = "balance : 잔고 , title : 가계부 제목 , memo : 가계부 머릿말 메모 등록 후 가계부 생성 API")
     @PostMapping
-    public Response makeAccountBook(@RequestBody AccountAddDto addRequest, @ApiIgnore Authentication authentication) {
+    public Response makeAccountBook(@Validated @RequestBody AccountAddDto addRequest, @ApiIgnore Authentication authentication) {
         AccountAddResponse response = accountBookService.makeBook(addRequest, authentication.getName());
         return Response.success(response);
     }
 
     @ApiOperation(value ="가계부 수정 API", notes = "해당 가계부 수정 API(잔고,가계부 제목,가계부 머릿말 메모 수정)")
     @PatchMapping("/{id}")
-    public Response modifyAccountBook(@PathVariable Long id, @RequestBody AccountModifyDto modifyRequest, @ApiIgnore Authentication authentication) {
+    public Response modifyAccountBook(@PathVariable Long id, @Validated @RequestBody AccountModifyDto modifyRequest, @ApiIgnore Authentication authentication) {
         AccountModifyResponse response = accountBookService.updateBook(id, modifyRequest, authentication.getName());
         return Response.success(response);
     }

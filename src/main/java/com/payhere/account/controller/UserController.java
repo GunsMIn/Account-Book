@@ -17,6 +17,7 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
@@ -31,7 +32,7 @@ public class UserController {
 
     @ApiOperation(value = "회원가입", notes = "email , password , name 으로 회원가입 진행 API")
     @PostMapping("/join")
-    public Response<UserJoinResponse> join(@RequestBody UserJoinDto userJoinDto) {
+    public Response<UserJoinResponse> join(@Validated @RequestBody UserJoinDto userJoinDto) {
         UserJoinResponse response = userService.join(userJoinDto);
         return Response.success(response);
     }
@@ -39,7 +40,7 @@ public class UserController {
 
     @ApiOperation(value = "로그인", notes = "로그인 성공 후 JWT토큰 / Refresh Token 발급")
     @PostMapping("/login")
-    public Response<UserLoginResponse> login(@RequestBody UserLoginDto userLoginDto) {
+    public Response<UserLoginResponse> login(@Validated @RequestBody UserLoginDto userLoginDto) {
         UserLoginResponse response = userService.login(userLoginDto.getEmail(), userLoginDto.getPassword());
         return Response.success(response); // 로그인 성공 시 토큰만 반환
     }
