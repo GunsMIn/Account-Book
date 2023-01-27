@@ -1,5 +1,6 @@
 package com.payhere.account.service;
 
+import com.payhere.account.domain.Response.accountBook.AccountAddResponse;
 import com.payhere.account.domain.Response.accountBook.AccountSelectResponse;
 import com.payhere.account.domain.dto.accountBook.AccountAddDto;
 import com.payhere.account.domain.entity.AccountBook;
@@ -45,7 +46,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @ActiveProfiles("test")
 class AccountBookServiceTest {
 
-  /*  AccountBookService accountBookService;
+  /* AccountBookService accountBookService;
 
     UserRepository userRepository = mock(UserRepository.class);
     AccountBookRepository accountBookRepository = mock(AccountBookRepository.class);
@@ -54,8 +55,7 @@ class AccountBookServiceTest {
 
     @InjectMocks
     AccountBookService accountBookService;
-    @InjectMocks
-    ValidateService validateService;
+    private ValidateService validateService = mock(ValidateService.class);
     @Mock
     UserRepository userRepository;
     @Mock
@@ -63,7 +63,7 @@ class AccountBookServiceTest {
     @Mock
     RecordRepository recordRepository;
 
-    /*@Test
+    @Test
     @DisplayName("가계부 조회 성공")
     void 가계부_조회_단건() {
 
@@ -90,6 +90,8 @@ class AccountBookServiceTest {
         AllFixture all = AllFixture.getDto();
         User user = UserFixture.get(all.getEmail(), all.getPassword());
         AccountBook accountBook = AccountBookFixture.get(user);
+        System.out.println("accountBook = " + accountBook);
+        /*request dto*/
         AccountAddDto accountAddDto = AccountAddDto.builder()
                 .title(accountBook.getTitle())
                 .balance(accountBook.getBalance())
@@ -97,9 +99,10 @@ class AccountBookServiceTest {
                 .build();
 
         when(userRepository.findByEmail(any())).thenReturn(Optional.of(user));
+        when(validateService.getUser(any())).thenReturn(user);
 
-        accountBookService.makeBook(accountAddDto, user.getEmail());
+        Assertions.assertDoesNotThrow(() -> accountBookService.makeBook(accountAddDto, user.getEmail()));
 
     }
-*/
+
 }
