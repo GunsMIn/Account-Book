@@ -46,7 +46,7 @@
   - account_book_id : Primary key
   - title : 가계부 제목
   - memo : 가계부 머릿글 메모
-  - balance : 잔고
+  - balance : 잔고 
 - **record : 가계부 기록 테이블**
   - record_id : Primary key 
   - money : 돈 (지출 할 돈/ 저축 할 돈)
