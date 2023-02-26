@@ -6,6 +6,7 @@ import lombok.*;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -14,8 +15,11 @@ public class UserJoinDto {
 
     @NotBlank
     private String userName;
+
+    @NotNull
     @Email
     private String email;
+
     @NotBlank
     private String password;
 
