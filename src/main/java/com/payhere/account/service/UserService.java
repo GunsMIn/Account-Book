@@ -41,9 +41,9 @@ public class UserService implements UserDetailsService {
      * request에 담긴 회원 정보로 로그인을 진행하는 메서드
      *
      * @param userJoinDto 회원의 이름 , 이메일 , 비밀번호 저장
-     *
-     * BCryptPasswordEncoder로 비밀번호 암호화 후 DB저장
-     * @return  UserJoinResponse 반환
+     *                    <p>
+     *                    BCryptPasswordEncoder로 비밀번호 암호화 후 DB저장
+     * @return UserJoinResponse 반환
      */
     public UserJoinResponse join(UserJoinDto userJoinDto) {
         /*중복된 이메일인지 check🔽*/
@@ -57,37 +57,35 @@ public class UserService implements UserDetailsService {
     }
 
 
-
     /**
      * request에 담긴 회원 정보로 로그인을 진행하는 메서드
      *
-     * @param email 로그인 이메일
+     * @param email    로그인 이메일
      * @param password 로그인 비밀번호
-     * @return JWT,refreshToken 이 담겨있는 UserLoginResponse 반환
+     * @return JWT, refreshToken 이 담겨있는 UserLoginResponse 반환
      */
     //(1.아이디 존재 여부 2.비밀번호 일치 여부) -> 성공 시 토큰 응답
-    public UserLoginResponse login(String email,String password) {
-        log.info("로그인 아이디 : {} , 비밀번호 : {}" , email,password);
+    public UserLoginResponse login(String email, String password) {
+        log.info("로그인 아이디 : {} , 비밀번호 : {}", email, password);
         //1.email 존재 여부 체크
         User user = validateService.getUser(email);
         //2.비밀번호 유효성 검사
         if (!encoder.matches(password, user.getPassword())) {
-            throw new UserException(ErrorCode.INVALID_PASSWORD,ErrorCode.INVALID_PASSWORD.getMessage());
+            throw new UserException(ErrorCode.INVALID_PASSWORD, ErrorCode.INVALID_PASSWORD.getMessage());
         }
         //두 가지 확인중 예외 안났으면 Token발행
         String token = JwtUtil.createJwt(user, secretKey);
         String refreshToken = JwtUtil.createRefreshJwt(user.getEmail(), secretKey);
         redisDao.setValues("RT:" + user.getEmail(), refreshToken);
-        return UserLoginResponse.of(token,refreshToken);
+        return UserLoginResponse.of(token, refreshToken);
     }
 
     /**
      * 회원의 role이 ADMIN(관리자) 회원만 사용자의 권한을 바꿀 수 있는 서비스 로직
      *
-     * @param email 로그인 이메일
-     * @param id 권한 수정 대상 회원의 id
+     * @param email       로그인 이메일
+     * @param id          권한 수정 대상 회원의 id
      * @param userRoleDto 권한 변경 값(USER.ADMIN)
-     *
      * @return UserAdminResponse 반환
      */
     public UserAdminResponse changeRole(String email, Long id, UserRoleDto userRoleDto) {
@@ -97,7 +95,9 @@ public class UserService implements UserDetailsService {
         return userAdminResponse;
     }
 
-    /**1.해당 회원이 ADMIN인지 검사 / 2.{ID} 바뀔 대상 조회 / 3.RequsetBody의 값 검사 **/
+    /**
+     * 1.해당 회원이 ADMIN인지 검사 / 2.{ID} 바뀔 대상 조회 / 3.RequsetBody의 값 검사
+     **/
     private User checkUserRole(String email, Long id, UserRoleDto userRoleDto) {
         //주의! findUser와 changedUser 변수 혼동 No
         //findUser는 토큰을 통해 인증 된 회원 -> 로그인된 회원
@@ -110,11 +110,11 @@ public class UserService implements UserDetailsService {
         User changedUser = userRepository.findById(id)
                 .orElseThrow(() -> new UserException(ErrorCode.USER_NOT_FOUND, String.format("%d번 회원은 존재하지 않습니다", id)));
         // requestBody에 들어올 값과 UserRole 비교
-        if(userRoleDto.getRole().toUpperCase().equals(UserRole.USER.name())) {
+        if (userRoleDto.getRole().toUpperCase().equals(UserRole.USER.name())) {
             changedUser.changeRole(UserRole.USER);
-        }else if(userRoleDto.getRole().toUpperCase().equals(UserRole.ADMIN.name())){
+        } else if (userRoleDto.getRole().toUpperCase().equals(UserRole.ADMIN.name())) {
             changedUser.changeRole(UserRole.ADMIN);
-        }else {
+        } else {
             throw new UserException(ErrorCode.USER_ROLE_NOT_FOUND, ErrorCode.USER_ROLE_NOT_FOUND.getMessage());
         }
 
@@ -125,7 +125,7 @@ public class UserService implements UserDetailsService {
     /**
      * 회원 삭제 메서드
      *
-     * @param id 삭제 될 회원의 id
+     * @param id    삭제 될 회원의 id
      * @param email 로그인 email
      * @return UserDeleteResponse 반환
      */
@@ -142,13 +142,14 @@ public class UserService implements UserDetailsService {
     }
 
 
-    /**UserDetailsService 메서드**/
+    /**
+     * UserDetailsService 메서드
+     **/
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         return userRepository.findByEmail(email)
-                .orElseThrow(() -> new UserException(ErrorCode.USER_NOT_FOUND,ErrorCode.USER_NOT_FOUND.getMessage()));
+                .orElseThrow(() -> new UserException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage()));
     }
-
 
 
 }

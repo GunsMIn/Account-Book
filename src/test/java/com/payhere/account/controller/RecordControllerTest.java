@@ -72,7 +72,7 @@ class RecordControllerTest {
         void 가계부_기록_등록_성공() throws Exception {
 
             /**when**/
-            when(recordService.spendOrSave(any(), any(),any())).thenReturn(response);
+            when(recordService.spendOrSave(any(), any(), any())).thenReturn(response);
             /**then**/
             String url = "/api/account_books/1/records";
             mockMvc.perform(post(url)
@@ -85,7 +85,7 @@ class RecordControllerTest {
                     .andExpect(jsonPath("$.result.expendType").value("교통비"))
                     .andExpect(jsonPath("$.result.act").value("지출"))
                     .andExpect(jsonPath("$.result.money").value(1000));
-            verify(recordService, atLeastOnce()).spendOrSave(any(), any(),any());
+            verify(recordService, atLeastOnce()).spendOrSave(any(), any(), any());
         }
 
 
@@ -95,7 +95,7 @@ class RecordControllerTest {
         void 가계부_기록_등록_실패1() throws Exception {
 
             /**when**/
-            when(recordService.spendOrSave(any(), any(),any())).thenReturn(response);
+            when(recordService.spendOrSave(any(), any(), any())).thenReturn(response);
             /**then**/
             String url = "/api/account_books/1/records";
             mockMvc.perform(post(url)
@@ -104,7 +104,7 @@ class RecordControllerTest {
                     .content(objectMapper.writeValueAsBytes(request)))
                     .andDo(print())
                     .andExpect(status().isUnauthorized());
-            verify(recordService, never()).spendOrSave(any(), any(),any());
+            verify(recordService, never()).spendOrSave(any(), any(), any());
         }
 
         @Test
@@ -124,7 +124,7 @@ class RecordControllerTest {
                     .andExpect(status().isNotFound())
                     .andExpect(jsonPath("$.resultCode").value("ERROR"))
                     .andExpect(jsonPath("$.result.errorCode").value("EMAIL_NOT_FOUND"));
-            verify(recordService, atLeastOnce()).spendOrSave(any(), any(),any());
+            verify(recordService, atLeastOnce()).spendOrSave(any(), any(), any());
         }
 
         @Test
@@ -144,7 +144,7 @@ class RecordControllerTest {
                     .andExpect(status().isNotFound())
                     .andExpect(jsonPath("$.resultCode").value("ERROR"))
                     .andExpect(jsonPath("$.result.errorCode").value("ACCOUNTBOOK_NOT_FOUND"));
-            verify(recordService, atLeastOnce()).spendOrSave(any(), any(),any());
+            verify(recordService, atLeastOnce()).spendOrSave(any(), any(), any());
         }
     }
 
@@ -175,7 +175,7 @@ class RecordControllerTest {
         @DisplayName("가계부 기록 수정 성공")
         void 가계부_기록_수정_성공() throws Exception {
             /**when**/
-            when(recordService.updateRecord(any(),any(),any(),any())).thenReturn(response);
+            when(recordService.updateRecord(any(), any(), any(), any())).thenReturn(response);
             /**then**/
             String url = "/api/account_books/1/records/1";
             mockMvc.perform(patch(url)
@@ -192,7 +192,7 @@ class RecordControllerTest {
                     .andExpect(jsonPath("$.result.message").value("기록 수정 성공"))
                     .andExpect(jsonPath("$.result.memo").value("지하철 교통비 1000원"));
 
-            verify(recordService, atLeastOnce()).updateRecord(any(), any(),any(),any());
+            verify(recordService, atLeastOnce()).updateRecord(any(), any(), any(), any());
         }
 
         @Test
@@ -200,7 +200,7 @@ class RecordControllerTest {
         @DisplayName("가계부 기록 수정 실패 : 인증되지 않은 사용자가 수정 시도시")
         void 가계부_기록_수정_실패1() throws Exception {
             /**when**/
-            when(recordService.updateRecord(any(),any(),any(),any())).thenReturn(response);
+            when(recordService.updateRecord(any(), any(), any(), any())).thenReturn(response);
             /**then**/
             String url = "/api/account_books/1/records/1";
             mockMvc.perform(patch(url)
@@ -210,7 +210,7 @@ class RecordControllerTest {
                     .andDo(print())
                     .andExpect(status().isUnauthorized());
 
-            verify(recordService, never()).updateRecord(any(), any(),any(),any());
+            verify(recordService, never()).updateRecord(any(), any(), any(), any());
         }
 
         @Test
@@ -218,7 +218,7 @@ class RecordControllerTest {
         @DisplayName("가계부 기록 수정 실패 : user 없음")
         void 가계부_기록_수정_실패2() throws Exception {
             /**when**/
-            when(recordService.updateRecord(any(),any(),any(),any())).thenThrow(new UserException(ErrorCode.EMAIL_NOT_FOUND));
+            when(recordService.updateRecord(any(), any(), any(), any())).thenThrow(new UserException(ErrorCode.EMAIL_NOT_FOUND));
             /**then**/
             String url = "/api/account_books/1/records/1";
             mockMvc.perform(patch(url)
@@ -230,7 +230,7 @@ class RecordControllerTest {
                     .andExpect(jsonPath("$.resultCode").value("ERROR"))
                     .andExpect(jsonPath("$.result.errorCode").value("EMAIL_NOT_FOUND"));
 
-            verify(recordService, atLeastOnce()).updateRecord(any(), any(),any(),any());
+            verify(recordService, atLeastOnce()).updateRecord(any(), any(), any(), any());
         }
 
         @Test
@@ -238,7 +238,7 @@ class RecordControllerTest {
         @DisplayName("가계부 기록 수정 실패 : 가계부 없음")
         void 가계부_기록_수정_실패3() throws Exception {
             /**when**/
-            when(recordService.updateRecord(any(),any(),any(),any())).thenThrow(new AccountException(ErrorCode.ACCOUNTBOOK_NOT_FOUND));
+            when(recordService.updateRecord(any(), any(), any(), any())).thenThrow(new AccountException(ErrorCode.ACCOUNTBOOK_NOT_FOUND));
             /**then**/
             String url = "/api/account_books/1/records/1";
             mockMvc.perform(patch(url)
@@ -250,7 +250,7 @@ class RecordControllerTest {
                     .andExpect(jsonPath("$.resultCode").value("ERROR"))
                     .andExpect(jsonPath("$.result.errorCode").value("ACCOUNTBOOK_NOT_FOUND"));
 
-            verify(recordService, atLeastOnce()).updateRecord(any(), any(),any(),any());
+            verify(recordService, atLeastOnce()).updateRecord(any(), any(), any(), any());
         }
 
         @Test
@@ -258,7 +258,7 @@ class RecordControllerTest {
         @DisplayName("가계부 기록 수정 실패 : 가계부 기록 없음")
         void 가계부_기록_수정_실패4() throws Exception {
             /**when**/
-            when(recordService.updateRecord(any(),any(),any(),any())).thenThrow(new RecordException(ErrorCode.RECORD_NOT_FOUND));
+            when(recordService.updateRecord(any(), any(), any(), any())).thenThrow(new RecordException(ErrorCode.RECORD_NOT_FOUND));
             /**then**/
             String url = "/api/account_books/1/records/1";
             mockMvc.perform(patch(url)
@@ -270,7 +270,7 @@ class RecordControllerTest {
                     .andExpect(jsonPath("$.resultCode").value("ERROR"))
                     .andExpect(jsonPath("$.result.errorCode").value("RECORD_NOT_FOUND"));
 
-            verify(recordService, atLeastOnce()).updateRecord(any(), any(),any(),any());
+            verify(recordService, atLeastOnce()).updateRecord(any(), any(), any(), any());
         }
 
         @Test
@@ -278,7 +278,7 @@ class RecordControllerTest {
         @DisplayName("가계부 기록 수정 실패 : 가계부 기록 쓴 user != 수정 시도하려는 user")
         void 가계부_기록_수정_실패5() throws Exception {
             /**when**/
-            when(recordService.updateRecord(any(),any(),any(),any())).thenThrow(new UserException(ErrorCode.INVALID_PERMISSION));
+            when(recordService.updateRecord(any(), any(), any(), any())).thenThrow(new UserException(ErrorCode.INVALID_PERMISSION));
             /**then**/
             String url = "/api/account_books/1/records/1";
             mockMvc.perform(patch(url)
@@ -290,7 +290,7 @@ class RecordControllerTest {
                     .andExpect(jsonPath("$.resultCode").value("ERROR"))
                     .andExpect(jsonPath("$.result.errorCode").value("INVALID_PERMISSION"));
 
-            verify(recordService, times(1)).updateRecord(any(), any(),any(),any());
+            verify(recordService, times(1)).updateRecord(any(), any(), any(), any());
         }
 
     }
@@ -299,8 +299,10 @@ class RecordControllerTest {
     @Nested
     @DisplayName("가계부 기록 delete")
     class Delete {
-        /**기록 삭제 시 응답값**/
-       RecordDeleteResponse response = RecordDeleteResponse.builder()
+        /**
+         * 기록 삭제 시 응답값
+         **/
+        RecordDeleteResponse response = RecordDeleteResponse.builder()
                 .message("기록 수정 성공")
                 .id(1L)
                 .build();
@@ -322,7 +324,7 @@ class RecordControllerTest {
                     .andExpect(jsonPath("$.result.message").value("기록 수정 성공"))
                     .andExpect(jsonPath("$.result.id").value(1L));
 
-            verify(recordService, atLeastOnce()).deleteRecord(any(),any(),any());
+            verify(recordService, atLeastOnce()).deleteRecord(any(), any(), any());
         }
 
         @Test
@@ -339,7 +341,7 @@ class RecordControllerTest {
                     .andDo(print())
                     .andExpect(status().isUnauthorized());
 
-            verify(recordService, never()).deleteRecord(any(),any(),any());
+            verify(recordService, never()).deleteRecord(any(), any(), any());
         }
 
         @Test
@@ -358,7 +360,7 @@ class RecordControllerTest {
                     .andExpect(jsonPath("$.resultCode").value("ERROR"))
                     .andExpect(jsonPath("$.result.errorCode").value("EMAIL_NOT_FOUND"));
 
-            verify(recordService, times(1)).deleteRecord(any(),any(),any());
+            verify(recordService, times(1)).deleteRecord(any(), any(), any());
         }
 
         @Test
@@ -377,7 +379,7 @@ class RecordControllerTest {
                     .andExpect(jsonPath("$.resultCode").value("ERROR"))
                     .andExpect(jsonPath("$.result.errorCode").value("ACCOUNTBOOK_NOT_FOUND"));
 
-            verify(recordService, times(1)).deleteRecord(any(),any(),any());
+            verify(recordService, times(1)).deleteRecord(any(), any(), any());
         }
 
         @Test
@@ -396,7 +398,7 @@ class RecordControllerTest {
                     .andExpect(jsonPath("$.resultCode").value("ERROR"))
                     .andExpect(jsonPath("$.result.errorCode").value("RECORD_NOT_FOUND"));
 
-            verify(recordService, times(1)).deleteRecord(any(),any(),any());
+            verify(recordService, times(1)).deleteRecord(any(), any(), any());
         }
 
         @Test
@@ -415,14 +417,16 @@ class RecordControllerTest {
                     .andExpect(jsonPath("$.resultCode").value("ERROR"))
                     .andExpect(jsonPath("$.result.errorCode").value("INVALID_PERMISSION"));
 
-                    verify(recordService, times(1)).deleteRecord(any(),any(),any());
+            verify(recordService, times(1)).deleteRecord(any(), any(), any());
         }
     }
 
     @Nested
     @DisplayName("가계부 기록 restore(복원)")
     class Restore {
-        /**기록 복원 Response**/
+        /**
+         * 기록 복원 Response
+         **/
         RecordRestoreResponse response = RecordRestoreResponse.builder()
                 .message("기록 복원 성공")
                 .id(1L)
